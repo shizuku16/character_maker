@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script>
         function load(){
-            var url=document.getElementById("url").value;
+            var url=document.getElementById("url").value.replace(/#top/,"");
             $.ajax({
                     url: url+".js",
                     type: 'GET',
