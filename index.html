@@ -339,7 +339,10 @@
 
         //奇獣作成
         function horsemake(jsondata){
-            let horse=[jsondata.horse_name].concat(jsondata.horses_name)
+            let horse2=[jsondata.horse_name].concat(jsondata.horses_name);
+            let horse=[];
+            for(let i=0;i<horse2.length;i++) if(horse2[i]) horse.push(horse2[i]);
+            console.log(horse)
             let animaldata=[];
             let v={name:[],hp:[],mp:[],hit:[],dmg:[],evd:[],def:[],hr:[],mr:[]};
             for(let i=0;i<3;i++){
