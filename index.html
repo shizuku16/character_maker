@@ -376,9 +376,10 @@
             v.mr=v.mr.concat(jsondata.horsedatas_mr);
             console.log(v);
 
-            let bui1 = 0;
-            let bui2=0;
+            let bui1 = v.hr.findIndex(e=>{if(e.match(/\d+/)) return true});
+            let bui2=v.hr.findIndex(e=>{if(e.match(/\d+/)) return true});
             for(let num=0;num<horse.length;num++){
+                console.log(bui1);
                 let writeString=`<?xml version="1.0" encoding="UTF-8"?>\n<character>\n  <data name="character">\n    <data name="image">\n      <data type="image" name="imageIdentifier"></data>\n    </data>    <data name="common">\n      <data name="name">${horse[num]}</data>\n      <data name="size">1</data>\n    </data>\n`;
                 writeString+=`    <data name="detail">\n      <data name="リソース">\n`;
 
@@ -388,13 +389,13 @@
                     writeString+=`        </data>\n`;
                     i++;
                 }
-                bui1++;
+                bui1=v.hr.findIndex((e,index)=>{if(index>bui1&&e.match(/\d+/)) return true});
                 writeString+=`      </data>\n      <data name="バフ・デバフ">\n        <data name="命中" type="numberResource" currentValue="0">5</data>\n        <data name="回避" type="numberResource" currentValue="0">5</data>\n        <data name="攻撃" type="numberResource" currentValue="0">5</data>\n        <data name="精神抵抗" type="numberResource" currentValue="0">5</data>\n        <data name="生命抵抗" type="numberResource" currentValue="0">5</data>\n      </data>\n    </data>\n  </data>\n  <chat-palette dicebot="SwordWorld2.5">`;
                 writeString+=`2d+${v.mr[bui2]}+{精神抵抗}　【精神抵抗】\n2d+${v.hr[bui2]}+{生命抵抗}　【生命抵抗】\n`;
                 for(;v.name[bui2];bui2++){
                     writeString+=`\n[${v.name[bui2]}]\n2d+${v.hit[bui2]}+{命中} 【命中判定】\n2d+${v.dmg[bui2]}+{攻撃}　【ダメージ】\n2d+${v.evd[bui2]}+{回避}　【回避】\n`;
                 }
-                bui2++;
+                bui2=v.hr.findIndex((e,index)=>{if(index>bui2&&e.match(/\d+/)) return true});
                 writeString+=`</chat-palette>\n</character>`;
                 animaldata.push(writeString);
             }
@@ -437,8 +438,8 @@
     <p>
         ※騎獣について<br>
         キャラクター保管所の「同行クリーチャー」欄を騎獣として作成します。<br>
-        部位は、空欄の行を一行挟むと次の騎獣の部位として認識します。<br>
-        生命抵抗・精神抵抗は各騎獣の最初の部位に書かれているものを採用します。<br>
+        部位は、空欄の行を一行以上挟むと次の騎獣の部位として認識します。<br>
+        空欄の後、生命抵抗の基準値が最初に書かれている行を、騎獣の最初の部位と認識します。<br>
         <img src="./騎獣の説明.png" width="500">
     </p>
 
