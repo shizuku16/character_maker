@@ -14,10 +14,12 @@ async function nameget() {
             dataType: 'jsonp',
             jsonpCallback: 'callback'
         })
-        .done(function(jsondate){
+        .done(function(jsondata){
             let header = document.getElementById('name');
 		    header.textContent = '';
-		    header.insertAdjacentHTML('afterbegin',`　タイトル：${jsondate.data_title}`);
+		    header.insertAdjacentHTML('afterbegin',`　タイトル：${jsondata.data_title}`);
+            if(jsondata.V_GLv16!="0") document.getElementById("rider").hidden=false;
+            else document.getElementById("rider").hidden=true;
 		})
 }
 
@@ -81,7 +83,10 @@ function yomikomi(img){
             if(jsondata.V_GLv11!="0") writeString+=`\n//-----レンジャー\n2d+{レンジャー}+({器用度}/6) 【レンジャー技巧判定】応急手当/隠蔽/解除*/罠設置* (*は自然環境のみ)\n2d+{レンジャー}+({敏捷度}/6) 【レンジャー運動判定】受け身/隠密/軽業/登攀/尾行\n2d+{レンジャー}+({知力}/6) 【レンジャー観察判定】病気知識/薬品学/足跡追跡/異常感知*/聞き耳/危険感知/探索*/天候予測/罠回避*/地図作製* (*は自然環境のみ)\nk10+{レンジャー}+({器用度}/6)@13 【救命草】\nk0+{レンジャー}+({器用度}/6)@13 【魔香草】\nk20+{レンジャー}+({知力}/6)@13 【ヒーリングポーション】\nk30+{レンジャー}+({知力}/6)@13 【トリートポーション】\nC({レンジャー}+({知力}/6)) 【魔香水】\n`;
             if(jsondata.V_GLv12!="0") writeString+=`\n//-----セージ\n2d+{セージ}+({知力}/6) 【セージ知識判定】見識/文献/魔物知識/文明鑑定/宝物鑑定/病気知識/薬品学/地図作製\n`;
             if(jsondata.V_GLv14!="0") writeString+=`\n//-----バード\n2d+{バード}+({知力}/6) 【見識判定】\n2d+{バード}+({精神力}/6) 【演奏判定】\n`;
-            if(jsondata.V_GLv16!="0") writeString+=`\n//-----ライダー\n2d+{ライダー}+({器用度}/6) 【応急手当判定】\n2d+{ライダー}+({敏捷度}/6) 【ライダー運動判定】受け身/騎乗\n2d+{ライダー}+({知力}/6) 【ライダー知識判定】弱点隠蔽/魔物知識*/地図作製 (*弱点不可)\n2d+{ライダー}+({知力}/6) 【ライダー観察判定*】足跡追跡/異常感知/危険感知/探索/罠回避 (*要【探索指令】)\n`;
+            if(jsondata.V_GLv16!="0") {
+                writeString+=`\n//-----ライダー\n2d+{ライダー}+({器用度}/6) 【応急手当判定】\n2d+{ライダー}+({敏捷度}/6) 【ライダー運動判定】受け身/騎乗\n2d+{ライダー}+({知力}/6) 【ライダー知識判定】弱点隠蔽/魔物知識*/地図作製 (*弱点不可)\n2d+{ライダー}+({知力}/6) 【ライダー観察判定*】足跡追跡/異常感知/危険感知/探索/罠回避 (*要【探索指令】)\n`;
+                if(document.getElementById("riderseisin").checked) writeString+=`2d+{ライダー}+({精神力}/6) 【ライダー精神力】威嚇/騎獣特殊能力 \n`
+            }
             if(jsondata.V_GLv15!="0") writeString+=`\n//-----アルケミスト\n2d+{アルケミスト}+({知力}/6) 【アルケミスト知識判定】見識/文献/薬品学\n2d+{アルケミスト}+({知力}/6) 【賦術判定】\n`;
             if(jsondata.V_GLv10!="0"||jsondata.V_GLv12!="0"||jsondata.V_GLv16!="0"||jsondata.V_GLv18!="0") writeString+=`\n//-----戦闘準備\n`;
             if(jsondata.V_GLv10!="0") writeString+=`2d+{スカウト}+({敏捷度}/6)+${jsondata.sensei_mod||0} 【先制判定】\n`;
