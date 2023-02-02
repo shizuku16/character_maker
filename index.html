@@ -25,7 +25,14 @@
         </div>
         <br>チャットパレットの魔法の記述<br>
         <input type="radio" name="mahou" id="mahou" checked><label for="mahou">使用可能な魔法のみ</label><br>
-        <input type="radio" name="mahou" id="mahou2" ><label for="mahou2">威力0から100まで10ごとに全て作る</label><br>
+        <input type="radio" name="mahou" id="mahou2" ><label for="mahou2">威力0から100まで10ごとに全て作る</label><br><br>
+        チャットパレットの武器の記述<br>
+        <input type="checkbox" id="buki" checked onchange="bukiload(this)"><label for="buki">武器のチャットパレットを生成する。</label>
+        <div id="bukioption">
+            <input type="checkbox" id="kurirei" checked><label for="kurirei">クリレイのチャットパレットを生成する。</label><br>
+            <input type="checkbox" id="demeup" checked><label for="demeup">出目上昇のチャットパレットを生成する。</label><br>
+            <input type="checkbox" id="demefix"><label for="demefix">出目固定のチャットパレットを生成する。</label><br>
+        </div>
         
     </div><br>
     
