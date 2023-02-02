@@ -23,6 +23,21 @@ async function nameget() {
 		})
 }
 
+function bukiload(choice){
+    if(choice.checked) {
+        document.getElementById("bukioption").hidden=false;
+        document.getElementById("kurirei").checked=true;
+        document.getElementById("demeup").checked=true;
+        document.getElementById("demefix").checked=true;
+    }
+    else {
+        document.getElementById("bukioption").hidden=true;
+        document.getElementById("kurirei").checked=false;
+        document.getElementById("demeup").checked=false;
+        document.getElementById("demefix").checked=false;
+    }
+}
+
 async function load() {
     const imagefile=document.getElementById("image");
     if(imagefile.files[0]){
@@ -65,8 +80,13 @@ function yomikomi(img){
                 if(jsondata[num]==0)continue;
                 writeString+=`        <data name="${ginou_list[i-1]}">${jsondata[num]}</data>\n`
             }
-            writeString+=`\n      </data>\n      <data name="バフ・デバフ">\n        <data type="numberResource" currentValue="0" name="命中">5</data>\n        <data type="numberResource" currentValue="0" name="回避">5</data>\n        <data type="numberResource" currentValue="0" name="攻撃">5</data>\n        <data type="numberResource" currentValue="0" name="攻撃2">5</data>\n        <data type="numberResource" currentValue="0" name="クリレイ">5</data>\n        <data type="numberResource" currentValue="0" name="出目上昇">5</data>\n        `;
-            writeString+=`<data type="numberResource" currentValue="0" name="出目固定">12</data>\n        <data type="numberResource" currentValue="0" name="魔法行使">5</data>\n        <data type="numberResource" currentValue="0" name="魔法威力">5</data>\n        <data type="numberResource" currentValue="0" name="生命抵抗">5</data>\n        <data type="numberResource" currentValue="0" name="精神抵抗">5</data>\n        <data type="numberResource" currentValue="0" name="ダメージ軽減">5</data>\n      </data>\n      <data name="所持品">\n`;
+            writeString+=`\n      </data>\n      <data name="バフ・デバフ">\n        <data type="numberResource" currentValue="0" name="命中">5</data>\n        <data type="numberResource" currentValue="0" name="回避">5</data>\n        <data type="numberResource" currentValue="0" name="攻撃">5</data>\n        <data type="numberResource" currentValue="0" name="攻撃2">5</data>`;
+            if(document.getElementById("kurirei").checked) writeString+= `\n        <data type="numberResource" currentValue="0" name="クリレイ">5</data>`;
+            if(document.getElementById("demeup").checked) writeString+= `\n        <data type="numberResource" currentValue="0" name="出目上昇">5</data>`;
+            if(document.getElementById("demefix").checked) writeString+=`\n        <data type="numberResource" currentValue="0" name="出目固定">12</data>`;
+            writeString+=`\n        <data type="numberResource" currentValue="0" name="魔法行使">5</data>\n        <data type="numberResource" currentValue="0" name="魔法威力">5</data>\n        <data type="numberResource" currentValue="0" name="生命抵抗">5</data>\n        <data type="numberResource" currentValue="0" name="精神抵抗">5</data>`;
+            if(document.getElementById("damage").checked) writeString+=`\n        <data type="numberResource" currentValue="0" name="ダメージ軽減">5</data>`;
+            writeString+=`\n      </data>\n      <data name="所持品">\n`;
             for(let i=0;i<jsondata.item_name.length;i++){
                 writeString+=`        <data type="numberResource" currentValue="${jsondata.item_num[i]}" name="${jsondata.item_name[i]}">${jsondata.item_num[i]}</data>\n`;
             }
@@ -113,13 +133,20 @@ function yomikomi(img){
                     if(jsondata.arms_is_senyou[i]==1) hit=`({器用度}+2)/6`;
                     hit+=`+${jsondata.arms_hit_mod[i]||0}+${jsondata.arms_hit_tokugi||0}`;
                     if(!ginou) continue;
-                    writeString+=`\n//-----${buki}`;
-                    writeString+=`\n2d+{${ginou}}+${hit}+{命中} 【命中力判定】${buki}`;
-                    writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical} 【威力】${buki}`;
-                    writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
-                    writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
-                    writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
-                    writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
+                    if(document.getElementById("buki").checked){
+                        writeString+=`\n//-----${buki}`;
+                        writeString+=`\n2d+{${ginou}}+${hit}+{命中} 【命中力判定】${buki}`;
+                        writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical} 【威力】${buki}`;
+                        if(document.getElementById("kurirei").checked)
+                            writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
+                        if(document.getElementById("demeup").checked)
+                            writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
+                        if(document.getElementById("kurirei").checked&&document.getElementById("demeup").checked)
+                            writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
+                        if(document.getElementById("demefix").checked)
+                            writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
+                    }
+                    
                 }
             }
 
