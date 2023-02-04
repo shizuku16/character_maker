@@ -24,6 +24,7 @@ footer {
     border: 2px solid rgb(0, 0, 0); /*枠線*/
     border-radius: 15px 15px 15px 15px; /*角丸（左上15px 右上0 右下15px 左下0）*/
     width: fit-content;
+    user-select: none;
 }
 
 a.makebtn {
