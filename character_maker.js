@@ -226,6 +226,14 @@ function yomikomi(img){
                     {level:7,iryoku:"k20",name:"シュートアロー",c:10,attribute:"window"},
                     {level:12,iryoku:"k20",name:"ウィンドストーム",c:10,attribute:"window"},
                     {level:15,iryoku:"k40",name:"トルネード",c:10,attribute:"window"},
+                    {level:1,line:true},
+                    {level:2,fixed:0,name:"ウィスパーヒール",attribute:"light"},
+                    {level:3,fixed:4,name:"プライマリィヒーリング",attribute:"light"},
+                    {level:4,fixed:0,name:"バーチャルタフネス",attribute:"light"},
+                    {level:6,fixed:8,name:"アドバンストヒーリング",attribute:"light"},
+                    {level:8,fixed:12,name:"エクステンドヒーリング",attribute:"light"},
+                    {level:10,fixed:6,name:"リッチヒール",attribute:"light"},
+                    {level:13,fixed:6,name:"バーチャルタフネス2",attribute:"light"},
                 ],
                 9:[
                     {level:5,iryoku:"k30",name:"グレネード",c:10},
@@ -283,14 +291,23 @@ function yomikomi(img){
                     let magic="MLv"+magic_numlist[i];
                     let lv=Number(jsondata[magic]);
                     let ginou=ginou_list[magic_numlist[i]-1];
+                    //魔法技能を習得しているかの確認
                     if(!lv) continue;
                     writeString+=`\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使} 【${magicName_list[i]}行使判定】\n`;
                     for(let j=0;j<magic_list[magic_numlist[i]].length;j++){
+                        //魔法の詳細をmagic_itemに代入
                         let magic_item=magic_list[magic_numlist[i]][j];
+                        //妖精魔法でチェックのついていない場合の処理
                         if(i==3&&!magic_item.line){
                             if(!document.getElementById(magic_item.attribute).checked)
                                 continue;
                         }
+                        //fixedに値があれば、魔力+固定値のチャットパレットを作る
+                        if(magic_item.fixed!=undefined){
+                            writeString+=`C({${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+${magic_item.fixed})　【${magic_item.name}】\n`;
+                            continue;
+                        }
+                        //チャットパレットに記述
                         if(magic_item.level<=lv){
                             if(magic_item.line) {
                                 writeString+=`\n`
