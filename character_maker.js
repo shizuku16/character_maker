@@ -20,6 +20,9 @@ async function nameget() {
 		    header.insertAdjacentHTML('afterbegin',`　タイトル：${jsondata.data_title}`);
             if(jsondata.V_GLv16!="0") document.getElementById("rider").hidden=false;
             else document.getElementById("rider").hidden=true;
+
+            if(jsondata.V_GLv8!="0") document.getElementById("fairy").hidden=false;
+            else document.getElementById("fairy").hidden=true;
 		})
 }
 
@@ -196,32 +199,33 @@ function yomikomi(img){
                     {level:13,iryoku:"k70",name:"キュア・モータリー",c:13},
                 ],
                 8:[
-                    {level:3,iryoku:"k10",name:"アースハンマー",c:12},
-                    {level:4,iryoku:"k10",name:"ペブルショット",c:10},
-                    {level:6,iryoku:"k20",name:"ストーンブラスト",c:10},
-                    {level:12,iryoku:"k40",name:"クラック",c:10},
-                    {level:13,iryoku:"k50",name:"ジャイアントキック",c:12},
+                    {level:3,iryoku:"k10",name:"アースハンマー",c:12,attribute:"earth"},
+                    {level:4,iryoku:"k10",name:"ペブルショット",c:10,attribute:"earth"},
+                    {level:6,iryoku:"k20",name:"ストーンブラスト",c:10,attribute:"earth"},
+                    {level:12,iryoku:"k40",name:"クラック",c:10,attribute:"earth"},
+                    {level:13,iryoku:"k50",name:"ジャイアントキック",c:12,attribute:"earth"},
+                    {level:15,iryoku:"k50",name:"アースクェイク",c:12,attribute:"earth"},
                     {level:1,line:true},
-                    {level:3,iryoku:"k10",name:"アイスボルト",c:10},
-                    {level:7,iryoku:"k10",name:"チルレイン",c:10},
-                    {level:11,iryoku:"k40",name:"ウォーターエッジ",c:10},
-                    {level:13,iryoku:"k30",name:"アイスストーム",c:10},
-                    {level:14,iryoku:"k40",name:"フリーズ",c:10},
-                    {level:15,iryoku:"k40",name:"メイルシュトローム",c:10},
+                    {level:3,iryoku:"k10",name:"アイスボルト",c:10,attribute:"water"},
+                    {level:7,iryoku:"k10",name:"チルレイン",c:10,attribute:"water"},
+                    {level:11,iryoku:"k40",name:"ウォーターエッジ",c:10,attribute:"water"},
+                    {level:13,iryoku:"k30",name:"アイスストーム",c:10,attribute:"water"},
+                    {level:14,iryoku:"k40",name:"フリーズ",c:10,attribute:"water"},
+                    {level:15,iryoku:"k40",name:"メイルシュトローム",c:10,attribute:"water"},
                     {level:1,line:true},
-                    {level:2,iryoku:"k10",name:"ファイアボルト",c:10},
-                    {level:4,iryoku:"k30",name:"ヒートメタル",c:10},
-                    {level:5,iryoku:"k20",name:"フレイムアロー",c:10},
-                    {level:6,iryoku:"k10",name:"ファイアブラスト",c:10},
-                    {level:10,iryoku:"k40",name:"ファイアストーム",c:10},
-                    {level:11,iryoku:"k50",name:"ファイアジャベリン",c:10},
-                    {level:13,iryoku:"k20",name:"フレイムガイザー",c:13},
-                    {level:14,iryoku:"k60",name:"ファイアモーラー",c:10},
+                    {level:2,iryoku:"k10",name:"ファイアボルト",c:10,attribute:"fire"},
+                    {level:4,iryoku:"k30",name:"ヒートメタル",c:10,attribute:"fire"},
+                    {level:5,iryoku:"k20",name:"フレイムアロー",c:10,attribute:"fire"},
+                    {level:6,iryoku:"k10",name:"ファイアブラスト",c:10,attribute:"fire"},
+                    {level:10,iryoku:"k40",name:"ファイアストーム",c:10,attribute:"fire"},
+                    {level:11,iryoku:"k50",name:"ファイアジャベリン",c:10,attribute:"fire"},
+                    {level:13,iryoku:"k20",name:"フレイムガイザー",c:13,attribute:"fire"},
+                    {level:14,iryoku:"k60",name:"ファイアモーラー",c:10,attribute:"fire"},
                     {level:1,line:true},
-                    {level:3,iryoku:"k10",name:"ウィンドカッター",c:10},
-                    {level:7,iryoku:"k20",name:"シュートアロー",c:10},
-                    {level:12,iryoku:"k20",name:"ウィンドストーム",c:10},
-                    {level:15,iryoku:"k40",name:"トルネード",c:10},
+                    {level:3,iryoku:"k10",name:"ウィンドカッター",c:10,attribute:"window"},
+                    {level:7,iryoku:"k20",name:"シュートアロー",c:10,attribute:"window"},
+                    {level:12,iryoku:"k20",name:"ウィンドストーム",c:10,attribute:"window"},
+                    {level:15,iryoku:"k40",name:"トルネード",c:10,attribute:"window"},
                 ],
                 9:[
                     {level:5,iryoku:"k30",name:"グレネード",c:10},
@@ -283,6 +287,10 @@ function yomikomi(img){
                     writeString+=`\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使} 【${magicName_list[i]}行使判定】\n`;
                     for(let j=0;j<magic_list[magic_numlist[i]].length;j++){
                         let magic_item=magic_list[magic_numlist[i]][j];
+                        if(i==3&&!magic_item.line){
+                            if(!document.getElementById(magic_item.attribute).checked)
+                                continue;
+                        }
                         if(magic_item.level<=lv){
                             if(magic_item.line) {
                                 writeString+=`\n`
@@ -294,6 +302,7 @@ function yomikomi(img){
                         }
                     }
                 }
+                writeString=writeString.replace(/k50\+.*?【アースクェイク】/,"C(50+{魔法威力})　【アースクェイク】");
 
                 //チャットパレット(ウィザード)
                 if(jsondata.V_GLv5!="0"&&jsondata.V_GLv6!="0"){
