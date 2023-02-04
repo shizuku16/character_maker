@@ -25,7 +25,18 @@
         </div>
         <br>チャットパレットの魔法の記述<br>
         <input type="radio" name="mahou" id="mahou" checked><label for="mahou">使用可能な魔法のみ</label><br>
-        <input type="radio" name="mahou" id="mahou2" ><label for="mahou2">威力0から100まで10ごとに全て作る</label><br><br>
+        <input type="radio" name="mahou" id="mahou2" ><label for="mahou2">威力0から100まで10ごとに全て作る</label><br>
+        <div id="fairy" hidden>
+            <br>妖精魔法の属性<br>
+            <input type="checkbox" id="earth" checked><label for="earth">土 </label>
+            <input type="checkbox" id="water" checked><label for="water">水・氷</label>
+            <input type="checkbox" id="fire" checked><label for="fire">火 </label>
+            <input type="checkbox" id="window" checked><label for="window">風 </label>
+            <input type="checkbox" id="light" checked><label for="light">光 </label>
+            <input type="checkbox" id="dark" checked><label for="dark">闇 </label><br>
+        </div>
+
+        <br>
         チャットパレットの武器の記述<br>
         <input type="checkbox" id="buki" checked onchange="bukiload(this)"><label for="buki">武器のチャットパレットを生成する。</label>
         <div id="bukioption">
