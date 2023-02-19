@@ -133,22 +133,25 @@ function yomikomi(img){
                     let koteiti=`${jsondata.arms_damage_mod[i]||0}`;
                     let critical=Number(jsondata.arms_critical[i])||10;
                     let hit=`{器用度}/6`;
+                    let temporary="";
                     if(jsondata.arms_is_senyou[i]==1) hit=`({器用度}+2)/6`;
                     hit+=`+${jsondata.arms_hit_mod[i]||0}+${jsondata.arms_hit_tokugi||0}`;
                     if(!ginou) continue;
                     if(document.getElementById("buki").checked){
-                        writeString+=`\n//-----${buki}`;
-                        writeString+=`\n2d+{${ginou}}+${hit}+{命中} 【命中力判定】${buki}`;
-                        writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical} 【威力】${buki}`;
+                        temporary+=`\n//-----${buki}`;
+                        temporary+=`\n2d+{${ginou}}+${hit}+{命中} 【命中力判定】${buki}`;
+                        temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical} 【威力】${buki}`;
                         if(document.getElementById("kurirei").checked)
-                            writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
                         if(document.getElementById("demeup").checked)
-                            writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
                         if(document.getElementById("kurirei").checked&&document.getElementById("demeup").checked)
-                            writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
                         if(document.getElementById("demefix").checked)
-                            writeString+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
                     }
+                    if(jsondata.arms_cate[i]=="ガン") temporary=temporary.replace(/筋力/g,"知力");
+                    writeString+=temporary;
                     
                 }
             }
