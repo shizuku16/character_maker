@@ -51,3 +51,9 @@ summary{
     text-decoration: underline ;
     text-decoration-color:rgb(148, 148, 148);
 }
+.form1{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1em;
+    gap: 30px 20px;
+}
