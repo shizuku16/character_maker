@@ -23,27 +23,44 @@
         <div id="rider" hidden>
             <input type="checkbox" id="riderseisin" checked><label for="riderseisin">「ライダー技能+{精神力}/6」をチャットパレットに追加</label><br>
         </div>
-        <br>チャットパレットの魔法の記述<br>
-        <input type="radio" name="mahou" id="mahou" checked><label for="mahou">使用可能な魔法のみ</label><br>
-        <input type="radio" name="mahou" id="mahou2" ><label for="mahou2">威力0から100まで10ごとに全て作る</label><br>
-        <div id="fairy" hidden>
-            <br>妖精魔法の属性<br>
-            <input type="checkbox" id="earth" checked><label for="earth">土 </label>
-            <input type="checkbox" id="water" checked><label for="water">水・氷</label>
-            <input type="checkbox" id="fire" checked><label for="fire">火 </label>
-            <input type="checkbox" id="window" checked><label for="window">風 </label>
-            <input type="checkbox" id="light" checked><label for="light">光 </label>
-            <input type="checkbox" id="dark" checked><label for="dark">闇 </label><br>
-        </div>
+        <br>
+        <details open>
+            <summary>チャットパレットの魔法の記述</summary>
+            <input type="radio" name="mahou" id="mahou" checked><label for="mahou">使用可能な魔法のみ</label><br>
+            <input type="radio" name="mahou" id="mahou2" ><label for="mahou2">威力0から100まで10ごとに全て作る</label><br>
+            <div id="fairy" hidden>
+                <br>妖精魔法の属性<br>　
+                <input type="checkbox" id="earth" checked><label for="earth">土 </label>
+                <input type="checkbox" id="water" checked><label for="water">水・氷</label>
+                <input type="checkbox" id="fire" checked><label for="fire">火 </label>
+                <input type="checkbox" id="window" checked><label for="window">風 </label>
+                <input type="checkbox" id="light" checked><label for="light">光 </label>
+                <input type="checkbox" id="dark" checked><label for="dark">闇 </label><br>
+            </div>
+        </details>
 
         <br>
-        チャットパレットの武器の記述<br>
-        <input type="checkbox" id="buki" checked onchange="bukiload(this)"><label for="buki">武器のチャットパレットを生成する。</label>
-        <div id="bukioption">
-            <input type="checkbox" id="kurirei" checked><label for="kurirei">クリレイのチャットパレットを生成する。</label><br>
-            <input type="checkbox" id="demeup" checked><label for="demeup">出目上昇のチャットパレットを生成する。</label><br>
-            <input type="checkbox" id="demefix"><label for="demefix">出目固定のチャットパレットを生成する。</label><br>
-        </div>
+        <details open>
+            <summary>バフ・デバフ</summary>
+            <input type="checkbox" id="hit" checked><label for="hit">命中 </label>
+            <input type="checkbox" id="avoid" checked><label for="avoid">回避 </label>
+            <label for="attack">攻撃 </label><input type="number" id="attack" style="width:40px;" min="0" value="0"><br>
+            <input type="checkbox" id="magic_kousi" checked><label for="magic_kousi">魔法行使 </label>
+            <input type="checkbox" id="magic_iryoku" checked><label for="magic_iryoku">魔法威力 </label><br>
+            <input type="checkbox" id="seimei" checked><label for="seimei">生命抵抗 </label>
+            <input type="checkbox" id="seisin" checked><label for="seisin">精神抵抗 </label>
+        </details>
+        <br>
+        <details open>
+            <summary>チャットパレットの武器の記述</summary>
+            <input type="checkbox" id="buki" checked onchange="bukiload(this)"><label for="buki">武器のチャットパレットを生成する。</label>
+            <div id="bukioption">
+                <input type="checkbox" id="kurirei" checked><label for="kurirei">クリレイのチャットパレットを生成する。</label><br>
+                <input type="checkbox" id="demeup" checked><label for="demeup">出目上昇のチャットパレットを生成する。</label><br>
+                <input type="checkbox" id="demefix"><label for="demefix">出目固定のチャットパレットを生成する。</label><br>
+            </div>
+        </details>
+        <br>
         
     </div><br>
     
