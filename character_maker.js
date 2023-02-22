@@ -23,22 +23,39 @@ async function nameget() {
 
             if(jsondata.V_GLv8!="0") document.getElementById("fairy").hidden=false;
             else document.getElementById("fairy").hidden=true;
+
+            //武器がないなら命中バフをなくす。そうでないなら攻撃バフを２にする。
+            if(jsondata.arms_name.length==1&&jsondata.arms_name[0]=="") {
+                document.getElementById("hit").checked=false;
+                document.getElementById("attack").value=0;
+            }
+            else {
+                document.getElementById("attack").value=2;
+                document.getElementById("hit").checked=true;
+            }
+            
+            let magic_tf=0;
+            const magic_numlist=[5,6,7,8,9,17,24];
+            for(let i=0;i<magic_numlist.length;i++){
+                let magic="MLv"+magic_numlist[i];
+                let lv=Number(jsondata[magic]);
+                //魔法技能を習得しているかの確認
+                if(!lv) magic_tf=1;
+            }
+            if(magic_tf===0) {
+                document.getElementById("magic_kousi").checked=false;
+                document.getElementById("magic_iryoku").checked=false;
+            }
+            else{
+                document.getElementById("magic_kousi").checked=true;
+                document.getElementById("magic_iryoku").checked=true;
+            }
 		})
 }
 
 function bukiload(choice){
-    if(choice.checked) {
-        document.getElementById("bukioption").hidden=false;
-        document.getElementById("kurirei").checked=true;
-        document.getElementById("demeup").checked=true;
-        document.getElementById("demefix").checked=true;
-    }
-    else {
-        document.getElementById("bukioption").hidden=true;
-        document.getElementById("kurirei").checked=false;
-        document.getElementById("demeup").checked=false;
-        document.getElementById("demefix").checked=false;
-    }
+    if(choice.checked) document.getElementById("bukioption").hidden=false;
+    else document.getElementById("bukioption").hidden=true;
 }
 
 async function load() {
@@ -83,11 +100,20 @@ function yomikomi(img){
                 if(jsondata[num]==0)continue;
                 writeString+=`        <data name="${ginou_list[i-1]}">${jsondata[num]}</data>\n`
             }
-            writeString+=`\n      </data>\n      <data name="バフ・デバフ">\n        <data type="numberResource" currentValue="0" name="命中">5</data>\n        <data type="numberResource" currentValue="0" name="回避">5</data>\n        <data type="numberResource" currentValue="0" name="攻撃">5</data>\n        <data type="numberResource" currentValue="0" name="攻撃2">5</data>`;
-            if(document.getElementById("kurirei").checked) writeString+= `\n        <data type="numberResource" currentValue="0" name="クリレイ">5</data>`;
-            if(document.getElementById("demeup").checked) writeString+= `\n        <data type="numberResource" currentValue="0" name="出目上昇">5</data>`;
-            if(document.getElementById("demefix").checked) writeString+=`\n        <data type="numberResource" currentValue="0" name="出目固定">12</data>`;
-            writeString+=`\n        <data type="numberResource" currentValue="0" name="魔法行使">5</data>\n        <data type="numberResource" currentValue="0" name="魔法威力">5</data>\n        <data type="numberResource" currentValue="0" name="生命抵抗">5</data>\n        <data type="numberResource" currentValue="0" name="精神抵抗">5</data>`;
+            writeString+=`\n      </data>\n      <data name="バフ・デバフ">\n`;
+            const id=["hit","avoid","attack","kurirei","demeup","demefix","magic_kousi","magic_iryoku","seimei","seisin"];
+            const japanese=["命中","回避","攻撃","クリレイ","出目上昇","出目固定","魔法行使","魔法威力","生命抵抗","精神抵抗"];
+            for(let i=0;i<id.length;i++){
+                if(3<=i&&i<=5&&!document.getElementById("buki").checked) continue;
+                if(i==2){
+                    for(let j=0;j<document.getElementById(id[i]).value;j++){
+                        writeString+=`        <data type="numberResource" currentValue="0" name="攻撃${j+1}">5</data>\n`;
+                    }
+                    continue;
+                }
+                if(document.getElementById(id[i]).checked)
+                    writeString+=`        <data type="numberResource" currentValue="0" name="${japanese[i]}">5</data>\n`;
+            }
             if(document.getElementById("damage").checked) writeString+=`\n        <data type="numberResource" currentValue="0" name="ダメージ軽減">5</data>`;
             writeString+=`\n      </data>\n      <data name="所持品">\n`;
             for(let i=0;i<jsondata.item_name.length;i++){
@@ -140,17 +166,20 @@ function yomikomi(img){
                     if(document.getElementById("buki").checked){
                         temporary+=`\n//-----${buki}`;
                         temporary+=`\n2d+{${ginou}}+${hit}+{命中} 【命中力判定】${buki}`;
-                        temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical} 【威力】${buki}`;
+                        temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical} 【威力】${buki}`;
                         if(document.getElementById("kurirei").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
                         if(document.getElementById("demeup").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
                         if(document.getElementById("kurirei").checked&&document.getElementById("demeup").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
                         if(document.getElementById("demefix").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}+{攻撃2}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
                     }
-                    if(jsondata.arms_cate[i]=="ガン") temporary=temporary.replace(/筋力/g,"知力");
+                    let attackstring="";
+                    for(let i=0;i<document.getElementById("attack").value;i++) attackstring+=`+{攻撃${i+1}}`;
+                    temporary=temporary.replace(/\+{攻撃}/g,attackstring);
+                    if(jsondata.arms_cate[i]=="ガン") temporary=temporary.replace(/筋力/g,"知力")
                     writeString+=temporary;
                     
                 }
@@ -434,7 +463,15 @@ function yomikomi(img){
             }
 
             writeString+=`\n</chat-palette>\n</character>`;
-            writeString=writeString.replace(/\+0/g,"");
+            writeString=writeString.replace(/\+0/g,"").replace(/\n{3,}/g,"\n\n");
+            for(let i=0;i<japanese.length;i++){
+                if(2<=i&&i<=5) continue;
+                if(!document.getElementById(id[i]).checked){
+                    let reg=new RegExp("\\+{"+japanese[i]+"}","g");
+                    writeString=writeString.replace(reg,"");
+                }
+                    
+            }
 
             let writeString2=[];
             const kizyucheck=document.getElementById("kizyu").checked;
