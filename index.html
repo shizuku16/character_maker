@@ -12,10 +12,11 @@
     <link rel="stylesheet" href="./character_maker.css" type="text/css">
 </head>
 <body>
-    キャラシのURL：<input type="text" id="url" onchange="nameget()" size="40"><h id="name"></h><br>
+    キャラシのURL：<input type="text" id="url" onchange="nameget()" style="width: 25em;"><h id="name"></h><br>
     キャラコマ画像：<input type="file" id="image" name="image" accept="image/png,image/jpeg,image/jpg" onchange="previewImage(this)"><br><br>
     
-    <div class="box1" id="recipe">
+    <form class="form1">
+        <div class="box1" id="recipe">
         <span class="box-title">設定</span>
         <input type="checkbox" id="kizyu" checked><label for="kizyu">騎獣のキャラコマも同時に作成する</label><br>
         <input type="checkbox" id="tokugi" checked><label for="tokugi">戦闘特技のチャットパレットを作成する</label><br>
@@ -23,6 +24,18 @@
         <div id="rider" hidden>
             <input type="checkbox" id="riderseisin" checked><label for="riderseisin">「ライダー技能+{精神力}/6」をチャットパレットに追加</label><br>
         </div>
+
+        <br>
+        <details open>
+            <summary>バフ・デバフ</summary>
+            <input type="checkbox" id="hit" checked><label for="hit">命中 </label>
+            <input type="checkbox" id="avoid" checked><label for="avoid">回避 </label>
+            <label for="attack">攻撃 </label><input type="number" id="attack" style="width:2em;" min="0" value="0"><br>
+            <input type="checkbox" id="magic_kousi" checked><label for="magic_kousi">魔法行使 </label>
+            <input type="checkbox" id="magic_iryoku" checked><label for="magic_iryoku">魔法威力 </label><br>
+            <input type="checkbox" id="seimei" checked><label for="seimei">生命抵抗 </label>
+            <input type="checkbox" id="seisin" checked><label for="seisin">精神抵抗 </label>
+        </details>
         <br>
         <details open>
             <summary>チャットパレットの魔法の記述</summary>
@@ -38,18 +51,6 @@
                 <input type="checkbox" id="dark" checked><label for="dark">闇 </label><br>
             </div>
         </details>
-
-        <br>
-        <details open>
-            <summary>バフ・デバフ</summary>
-            <input type="checkbox" id="hit" checked><label for="hit">命中 </label>
-            <input type="checkbox" id="avoid" checked><label for="avoid">回避 </label>
-            <label for="attack">攻撃 </label><input type="number" id="attack" style="width:40px;" min="0" value="0"><br>
-            <input type="checkbox" id="magic_kousi" checked><label for="magic_kousi">魔法行使 </label>
-            <input type="checkbox" id="magic_iryoku" checked><label for="magic_iryoku">魔法威力 </label><br>
-            <input type="checkbox" id="seimei" checked><label for="seimei">生命抵抗 </label>
-            <input type="checkbox" id="seisin" checked><label for="seisin">精神抵抗 </label>
-        </details>
         <br>
         <details open>
             <summary>チャットパレットの武器の記述</summary>
@@ -62,19 +63,18 @@
         </details>
         <br>
         
-    </div><br>
-    
-    
+        </div><br>
+
+        <p class="explain">
+            ※騎獣について<br>
+            キャラクター保管所の「同行クリーチャー」欄を騎獣として作成します。<br>
+            部位は、空欄の行を一行以上挟むと次の騎獣の部位として認識します。<br>
+            空欄の後、生命抵抗の基準値が最初に書かれている行を、騎獣の最初の部位と認識します。<br>
+            <img src="./騎獣の説明.png" width="500">
+        </p>
+    </form>
     <a href="#" class="makebtn" onclick="load()">キャラコマ生成</a><br>
     <img id="preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" style="max-width:200px;display:block"><br>
-
-    <p>
-        ※騎獣について<br>
-        キャラクター保管所の「同行クリーチャー」欄を騎獣として作成します。<br>
-        部位は、空欄の行を一行以上挟むと次の騎獣の部位として認識します。<br>
-        空欄の後、生命抵抗の基準値が最初に書かれている行を、騎獣の最初の部位と認識します。<br>
-        <img src="./騎獣の説明.png" width="500">
-    </p>
 
     <footer>本ツールは、「グループＳＮＥ」及び「株式会社ＫＡＤＯＫＡＷＡ」が権利を有する『ソード・ワールド2.5』のプレイを支援するために作られたツールです。<br/>
         (C)GroupSNE<br/>
