@@ -47,3 +47,7 @@ a.makebtn:hover {
 #preview{
     margin-top: 1rem;
 }
+summary{
+    text-decoration: underline ;
+    text-decoration-color:rgb(148, 148, 148);
+}
