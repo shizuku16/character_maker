@@ -39,8 +39,11 @@
         <br>
         <details open>
             <summary>チャットパレットの魔法の記述</summary>
-            <input type="radio" name="mahou" id="mahou" checked><label for="mahou">使用可能な魔法のみ</label><br>
-            <input type="radio" name="mahou" id="mahou2" ><label for="mahou2">威力0から100まで10ごとに全て作る</label><br>
+            <input type="radio" name="mahou" id="mahou" checked onchange="mahouchange()"><label for="mahou">使用可能な魔法のみ</label><br>
+            <input type="radio" name="mahou" id="mahou2" onchange="mahouchange()"><label for="mahou2">威力0から100まで10ごとに全て作る</label><br>
+            <div id="mpcommand">
+                <input type="checkbox" name="mp" id="mp" checked><label for="mp">MP減少コマンドを付与</label>
+            </div>
             <div id="fairy" hidden>
                 <br>妖精魔法の属性<br>　
                 <input type="checkbox" id="earth" checked><label for="earth">土 </label>
