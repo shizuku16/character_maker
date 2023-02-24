@@ -58,6 +58,11 @@ function bukiload(choice){
     else document.getElementById("bukioption").hidden=true;
 }
 
+function mahouchange(){
+    if(document.getElementById("mahou").checked) document.getElementById("mpcommand").hidden=false;
+    else document.getElementById("mpcommand").hidden=true;
+}
+
 async function load() {
     const imagefile=document.getElementById("image");
     if(imagefile.files[0]){
@@ -188,132 +193,133 @@ function yomikomi(img){
             //チャットパレット(魔法)
             const magic_numlist=[5,6,7,8,9,17,24];
             const magicName_list=["真語魔法","操霊魔法","神聖魔法","妖精魔法","魔動機術","召異魔法","森羅魔法"];
+            const magicName_japanese=["ソーサラー","コンジャラー","プリースト","フェアリーテイマー","マギテック","デーモンルーラー","ドルイド"];
             const magic_list={
                 5:[
-                    {level:1,iryoku:"k10",name:"エネルギー・ボルト",c:10},
-                    {level:3,iryoku:"k20",name:"リープ・スラッシュ",c:10},
-                    {level:4,iryoku:"k20",name:"ライトニング",c:10},
-                    {level:5,iryoku:"k30",name:"ブラスト",c:10},
-                    {level:6,iryoku:"k20",name:"ファイアボール",c:10},
-                    {level:7,iryoku:"k10",name:"スティール・マインド",c:10},
-                    {level:8,iryoku:"k40",name:"エネルギー・ジャベリン",c:10},
-                    {level:9,iryoku:"k0",name:"ブレードネット",c:13},
-                    {level:10,iryoku:"k30",name:"ブリザード",c:10},
-                    {level:11,iryoku:"k50",name:"サンダー・ボルト",c:10},
-                    {level:12,iryoku:"k40",name:"シャイニング・スポット",c:9},
-                    {level:12,iryoku:"k30",name:"ショック",c:10},
-                    {level:14,iryoku:"k60",name:"ディメンジョン・ソード",c:10},
-                    {level:15,iryoku:"k100",name:"メテオ・ストライク",c:10}
+                    {level:1,iryoku:"k10",name:"エネルギー・ボルト",c:10,mp:5},
+                    {level:3,iryoku:"k20",name:"リープ・スラッシュ",c:10,mp:7},
+                    {level:4,iryoku:"k20",name:"ライトニング",c:10,mp:7},
+                    {level:5,iryoku:"k30",name:"ブラスト",c:10,mp:6},
+                    {level:6,iryoku:"k20",name:"ファイアボール",c:10,mp:8},
+                    {level:7,iryoku:"k10",name:"スティール・マインド",c:10,mp:2},
+                    {level:8,iryoku:"k40",name:"エネルギー・ジャベリン",c:10,mp:9},
+                    {level:9,iryoku:"k0",name:"ブレードネット",c:13,mp:10},
+                    {level:10,iryoku:"k30",name:"ブリザード",c:10,mp:10},
+                    {level:11,iryoku:"k50",name:"サンダー・ボルト",c:10,mp:13},
+                    {level:12,iryoku:"k40",name:"シャイニング・スポット",c:9,mp:16},
+                    {level:12,iryoku:"k30",name:"ショック",c:10,mp:15},
+                    {level:14,iryoku:"k60",name:"ディメンジョン・ソード",c:10,mp:18},
+                    {level:15,iryoku:"k100",name:"メテオ・ストライク",c:10,mp:30}
                 ],
                 6:[
-                    {level:1,iryoku:"k0",name:"スパーク",c:10},
-                    {level:7,iryoku:"k10",name:"ドレイン・タッチ",c:10},
-                    {level:8,iryoku:"k20",name:"アシッド・クラウド",c:10},
-                    {level:8,iryoku:"k20",name:"クリメイション",c:10},
-                    {level:9,iryoku:"k30",name:"カースドール",c:10},
-                    {level:15,iryoku:"k60",name:"デス・クラウド",c:10},
+                    {level:1,iryoku:"k0",name:"スパーク",c:10,mp:6},
+                    {level:7,iryoku:"k10",name:"ドレイン・タッチ",c:10,mp:7},
+                    {level:8,iryoku:"k20",name:"アシッド・クラウド",c:10,mp:10},
+                    {level:8,iryoku:"k20",name:"クリメイション",c:10,mp:8},
+                    {level:9,iryoku:"k30",name:"カースドール",c:10,mp:6},
+                    {level:15,iryoku:"k60",name:"デス・クラウド",c:10,mp:26},
                     {level:1,line:true},
-                    {level:2,iryoku:"k0",name:"アースヒール",c:13},
-                    {level:11,iryoku:"k30",name:"アース・ヒール2",c:13}
+                    {level:2,iryoku:"k0",name:"アースヒール",c:13,mp:3},
+                    {level:11,iryoku:"k30",name:"アース・ヒール2",c:13,mp:8}
                 ],
                 7:[
-                    {level:3,iryoku:"k10",name:"フォース",c:10},
-                    {level:5,iryoku:"k20",name:"ホーリー・ライト",c:10},
-                    {level:8,iryoku:"k20",name:"ゴッド・フィスト【小神】",c:9},
-                    {level:8,iryoku:"k30",name:"ゴッド・フィスト【大神】",c:10},
-                    {level:8,iryoku:"k40",name:"ゴッド・フィスト【古代神】",c:11},
-                    {level:9,iryoku:"k30",name:"フォース・イクスプロ―ジョン",c:10},
-                    {level:11,iryoku:"k50",name:"ホーリー・ライト2",c:10},
+                    {level:3,iryoku:"k10",name:"フォース",c:10,mp:4},
+                    {level:5,iryoku:"k20",name:"ホーリー・ライト",c:10,mp:6},
+                    {level:8,iryoku:"k20",name:"ゴッド・フィスト【小神】",c:9,mp:8},
+                    {level:8,iryoku:"k30",name:"ゴッド・フィスト【大神】",c:10,mp:10},
+                    {level:8,iryoku:"k40",name:"ゴッド・フィスト【古代神】",c:11,mp:12},
+                    {level:9,iryoku:"k30",name:"フォース・イクスプロ―ジョン",c:10,mp:12},
+                    {level:11,iryoku:"k50",name:"ホーリー・ライト2",c:10,mp:9},
                     {level:1,line:true},
-                    {level:2,iryoku:"k10",name:"キュア・ウーンズ",c:13},
-                    {level:5,iryoku:"k30",name:"キュア・ハート",c:13},
-                    {level:10,iryoku:"k50",name:"キュア・インジャリー",c:13},
-                    {level:13,iryoku:"k70",name:"キュア・モータリー",c:13},
+                    {level:2,iryoku:"k10",name:"キュア・ウーンズ",c:13,mp:3},
+                    {level:5,iryoku:"k30",name:"キュア・ハート",c:13,mp:5},
+                    {level:10,iryoku:"k50",name:"キュア・インジャリー",c:13,mp:8},
+                    {level:13,iryoku:"k70",name:"キュア・モータリー",c:13,mp:10},
                 ],
                 8:[
-                    {level:3,iryoku:"k10",name:"アースハンマー",c:12,attribute:"earth"},
-                    {level:4,iryoku:"k10",name:"ペブルショット",c:10,attribute:"earth"},
-                    {level:6,iryoku:"k20",name:"ストーンブラスト",c:10,attribute:"earth"},
-                    {level:12,iryoku:"k40",name:"クラック",c:10,attribute:"earth"},
-                    {level:13,iryoku:"k50",name:"ジャイアントキック",c:12,attribute:"earth"},
-                    {level:15,iryoku:"k50",name:"アースクェイク",c:12,attribute:"earth"},
+                    {level:3,iryoku:"k10",name:"アースハンマー",c:12,attribute:"earth",mp:3},
+                    {level:4,iryoku:"k10",name:"ペブルショット",c:10,attribute:"earth",mp:4},
+                    {level:6,iryoku:"k20",name:"ストーンブラスト",c:10,attribute:"earth",mp:6},
+                    {level:12,iryoku:"k40",name:"クラック",c:10,attribute:"earth",mp:9},
+                    {level:13,iryoku:"k50",name:"ジャイアントキック",c:12,attribute:"earth",mp:16},
+                    {level:15,iryoku:"k50",name:"アースクェイク",c:12,attribute:"earth",mp:28},
                     {level:1,line:true},
-                    {level:3,iryoku:"k10",name:"アイスボルト",c:10,attribute:"water"},
-                    {level:7,iryoku:"k10",name:"チルレイン",c:10,attribute:"water"},
-                    {level:11,iryoku:"k40",name:"ウォーターエッジ",c:10,attribute:"water"},
-                    {level:13,iryoku:"k30",name:"アイスストーム",c:10,attribute:"water"},
-                    {level:14,iryoku:"k40",name:"フリーズ",c:10,attribute:"water"},
-                    {level:15,iryoku:"k40",name:"メイルシュトローム",c:10,attribute:"water"},
+                    {level:3,iryoku:"k10",name:"アイスボルト",c:10,attribute:"water",mp:4},
+                    {level:7,iryoku:"k10",name:"チルレイン",c:10,attribute:"water",mp:8},
+                    {level:11,iryoku:"k40",name:"ウォーターエッジ",c:10,attribute:"water",mp:8},
+                    {level:13,iryoku:"k30",name:"アイスストーム",c:10,attribute:"water",mp:12},
+                    {level:14,iryoku:"k40",name:"フリーズ",c:10,attribute:"water",mp:12},
+                    {level:15,iryoku:"k40",name:"メイルシュトローム",c:10,attribute:"water",mp:15},
                     {level:1,line:true},
-                    {level:2,iryoku:"k10",name:"ファイアボルト",c:10,attribute:"fire"},
-                    {level:4,iryoku:"k30",name:"ヒートメタル",c:10,attribute:"fire"},
-                    {level:5,iryoku:"k20",name:"フレイムアロー",c:10,attribute:"fire"},
-                    {level:6,iryoku:"k10",name:"ファイアブラスト",c:10,attribute:"fire"},
-                    {level:10,iryoku:"k40",name:"ファイアストーム",c:10,attribute:"fire"},
-                    {level:11,iryoku:"k50",name:"ファイアジャベリン",c:10,attribute:"fire"},
-                    {level:13,iryoku:"k20",name:"フレイムガイザー",c:13,attribute:"fire"},
-                    {level:14,iryoku:"k60",name:"ファイアモーラー",c:10,attribute:"fire"},
+                    {level:2,iryoku:"k10",name:"ファイアボルト",c:10,attribute:"fire",mp:3},
+                    {level:4,iryoku:"k30",name:"ヒートメタル",c:10,attribute:"fire",mp:5},
+                    {level:5,iryoku:"k20",name:"フレイムアロー",c:10,attribute:"fire",mp:6},
+                    {level:6,iryoku:"k10",name:"ファイアブラスト",c:10,attribute:"fire",mp:6},
+                    {level:10,iryoku:"k40",name:"ファイアストーム",c:10,attribute:"fire",mp:13},
+                    {level:11,iryoku:"k50",name:"ファイアジャベリン",c:10,attribute:"fire",mp:9},
+                    {level:13,iryoku:"k20",name:"フレイムガイザー",c:13,attribute:"fire",mp:23},
+                    {level:14,iryoku:"k60",name:"ファイアモーラー",c:10,attribute:"fire",mp:16},
                     {level:1,line:true},
-                    {level:3,iryoku:"k10",name:"ウィンドカッター",c:10,attribute:"window"},
-                    {level:7,iryoku:"k20",name:"シュートアロー",c:10,attribute:"window"},
-                    {level:12,iryoku:"k20",name:"ウィンドストーム",c:10,attribute:"window"},
-                    {level:15,iryoku:"k40",name:"トルネード",c:10,attribute:"window"},
+                    {level:3,iryoku:"k10",name:"ウィンドカッター",c:10,attribute:"window",mp:4},
+                    {level:7,iryoku:"k20",name:"シュートアロー",c:10,attribute:"window",mp:6},
+                    {level:12,iryoku:"k20",name:"ウィンドストーム",c:10,attribute:"window",mp:9},
+                    {level:15,iryoku:"k40",name:"トルネード",c:10,attribute:"window",mp:13},
                     {level:1,line:true},
-                    {level:2,fixed:0,name:"ウィスパーヒール",attribute:"light"},
-                    {level:3,fixed:4,name:"プライマリィヒーリング",attribute:"light"},
-                    {level:4,fixed:0,name:"バーチャルタフネス",attribute:"light"},
-                    {level:6,fixed:8,name:"アドバンストヒーリング",attribute:"light"},
-                    {level:8,fixed:12,name:"エクステンドヒーリング",attribute:"light"},
-                    {level:10,fixed:6,name:"リッチヒール",attribute:"light"},
-                    {level:13,fixed:6,name:"バーチャルタフネス2",attribute:"light"},
+                    {level:2,fixed:0,name:"ウィスパーヒール",attribute:"light",mp:4},
+                    {level:3,fixed:4,name:"プライマリィヒーリング",attribute:"light",mp:5},
+                    {level:4,fixed:0,name:"バーチャルタフネス",attribute:"light",mp:4},
+                    {level:6,fixed:8,name:"アドバンストヒーリング",attribute:"light",mp:7},
+                    {level:8,fixed:12,name:"エクステンドヒーリング",attribute:"light",mp:9},
+                    {level:10,fixed:6,name:"リッチヒール",attribute:"light",mp:8},
+                    {level:13,fixed:6,name:"バーチャルタフネス2",attribute:"light",mp:9},
                 ],
                 9:[
-                    {level:5,iryoku:"k30",name:"グレネード",c:10},
-                    {level:8,iryoku:"k50",name:"パイルシューター",c:10},
-                    {level:14,iryoku:"k100",name:"オメガシューター",c:10},
-                    {level:15,iryoku:"k90",name:"スーパーノヴァ・ボム",c:10},
+                    {level:5,iryoku:"k30",name:"グレネード",c:10,mp:6},
+                    {level:8,iryoku:"k50",name:"パイルシューター",c:10,mp:6},
+                    {level:14,iryoku:"k100",name:"オメガシューター",c:10,mp:16},
+                    {level:15,iryoku:"k90",name:"スーパーノヴァ・ボム",c:10,mp:24},
                     {level:1,line:true},
-                    {level:2,iryoku:"k0",name:"ヒーリング・バレット",c:13},
-                    {level:10,iryoku:"k30",name:"トリート・バレット",c:13},
-                    {level:13,iryoku:"k30",name:"ヒーリングシャワー・バレット",c:13},
-                    {level:9,iryoku:"k50",name:"メディカルキット",c:13},
+                    {level:2,iryoku:"k0",name:"ヒーリング・バレット",c:13,mp:1},
+                    {level:10,iryoku:"k30",name:"トリート・バレット",c:13,mp:2},
+                    {level:13,iryoku:"k30",name:"ヒーリングシャワー・バレット",c:13,mp:6},
+                    {level:9,iryoku:"k50",name:"メディカルキット",c:13,mp:3},
                 ],
                 17:[
-                    {level:2,iryoku:"k20",name:"アヴェンジャー",c:10},
-                    {level:3,iryoku:"k10",name:"ヴェノムブレス",c:10},
-                    {level:5,iryoku:"k10",name:"アストラルバーン",c:10},
-                    {level:9,iryoku:"k40",name:"ヴェノムエスパーダ",c:10},
-                    {level:13,iryoku:"k40",name:"ソウルドレイン",c:10},
-                    {level:14,iryoku:"k70",name:"バーストゲート",c:10},
-                    {level:15,iryoku:"k30",name:"リーサルディメンジョン",c:13},
+                    {level:2,iryoku:"k20",name:"アヴェンジャー",c:10,mp:4,hp:4},
+                    {level:3,iryoku:"k10",name:"ヴェノムブレス",c:10,mp:8},
+                    {level:5,iryoku:"k10",name:"アストラルバーン",c:10,mp:5},
+                    {level:9,iryoku:"k40",name:"ヴェノムエスパーダ",c:10,mp:9},
+                    {level:13,iryoku:"k40",name:"ソウルドレイン",c:10,mp:20},
+                    {level:14,iryoku:"k70",name:"バーストゲート",c:10,mp:22},
+                    {level:15,iryoku:"k30",name:"リーサルディメンジョン",c:13,mp:36},
                 ],
                 24:[
-                    {level:3,iryoku:"dru[4,7,13]",name:"ソーンバッシュ"},
-                    {level:4,iryoku:"k20",name:"フリージングブレス",c:10},
-                    {level:4,iryoku:"k10",name:"ポイズンスプレッド",c:10},
-                    {level:7,iryoku:"dru[12,15,18]",name:"コングスマッシュ"},
-                    {level:9,iryoku:"dru[13,16,19]",name:"ボアラッシュ"},
-                    {level:10,iryoku:"k20",name:"チリングブレス",c:10},
-                    {level:10,iryoku:"dru[18,21,24]",name:"マルサーヴラプレス"},
-                    {level:12,iryoku:"k30",name:"クライオボルト",c:10},
-                    {level:13,iryoku:"k30",name:"ビームストライク",c:10},
-                    {level:13,iryoku:"dru[18,21,36]",name:"フリージングブレス"},
-                    {level:15,iryoku:"dru[24,27,30]",name:"ダブルストンプ"},
-                    {level:15,iryoku:"k50",name:"ブレイズシャワー",c:10},
+                    {level:3,iryoku:"dru[4,7,13]",name:"ソーンバッシュ",mp:5},
+                    {level:4,iryoku:"k20",name:"フリージングブレス",c:10,mp:5},
+                    {level:4,iryoku:"k10",name:"ポイズンスプレッド",c:10,mp:6},
+                    {level:7,iryoku:"dru[12,15,18]",name:"コングスマッシュ",mp:10},
+                    {level:9,iryoku:"dru[13,16,19]",name:"ボアラッシュ",mp:12},
+                    {level:10,iryoku:"k20",name:"チリングブレス",c:10,mp:11},
+                    {level:10,iryoku:"dru[18,21,24]",name:"マルサーヴラプレス",mp:14},
+                    {level:12,iryoku:"k30",name:"クライオボルト",c:10,mp:6},
+                    {level:13,iryoku:"k30",name:"ビームストライク",c:10,mp:8},
+                    {level:13,iryoku:"dru[18,21,36]",name:"ルナアタック",mp:18},
+                    {level:15,iryoku:"dru[24,27,30]",name:"ダブルストンプ",mp:24},
+                    {level:15,iryoku:"k50",name:"ブレイズシャワー",c:10,mp:16},
                     {level:1,line:true},
                     {level:2,iryoku:"k10",name:"ナチュラルパワー",c:13},
                     {level:12,iryoku:"k30",name:"ナチュラルパワー2",c:13},
                 ],
                 wizard:[
-                    {level:4,iryoku:"k20",name:"トキシック・ブリーズ",c:10},
-                    {level:7,iryoku:"k10",name:"ドロー・アウト",c:10},
-                    {level:8,iryoku:"k10",name:"ライフ・デリバー",c:10},
-                    {level:9,iryoku:"k20",name:"スリーショット・ライトニング【3本】",c:10},
-                    {level:9,iryoku:"k25",name:"スリーショット・ライトニング【2本】",c:10},
-                    {level:9,iryoku:"k30",name:"スリーショット・ライトニング【1本】",c:10},
-                    {level:12,iryoku:"k0",name:"ギアス",c:10},
-                    {level:13,iryoku:"k70",name:"デス・レイ",c:10},
-                    {level:15,iryoku:"k20",name:"オーバーブロウ",c:10},
+                    {level:4,iryoku:"k20",name:"トキシック・ブリーズ",c:10,mp:7},
+                    {level:7,iryoku:"k10",name:"ドロー・アウト",c:10,mp:7},
+                    {level:8,iryoku:"k10",name:"ライフ・デリバー",c:10,mp:8},
+                    {level:9,iryoku:"k20",name:"スリーショット・ライトニング【3本】",c:10,mp:12},
+                    {level:9,iryoku:"k25",name:"スリーショット・ライトニング【2本】",c:10,mp:12},
+                    {level:9,iryoku:"k30",name:"スリーショット・ライトニング【1本】",c:10,mp:12},
+                    {level:12,iryoku:"k0",name:"ギアス",c:10,mp:19},
+                    {level:13,iryoku:"k70",name:"デス・レイ",c:10,mp:12},
+                    {level:15,iryoku:"k20",name:"オーバーブロウ",c:10,mp:25},
                 ],
             };
 
@@ -329,6 +335,11 @@ function yomikomi(img){
                     for(let j=0;j<magic_list[magic_numlist[i]].length;j++){
                         //魔法の詳細をmagic_itemに代入
                         let magic_item=magic_list[magic_numlist[i]][j];
+                        //mpの計算
+                        let mp=magic_item.mp;
+                        if(jsondata.ST_name.includes(`MP軽減/${magicName_japanese[i]}`)) mp--;
+                        if(Number(jsondata.V_GLv12)>=9) mp--;
+                        if(mp<1) mp=1;
                         //妖精魔法でチェックのついていない場合の処理
                         if(i==3&&!magic_item.line){
                             if(!document.getElementById(magic_item.attribute).checked)
@@ -336,7 +347,7 @@ function yomikomi(img){
                         }
                         //fixedに値があれば、魔力+固定値のチャットパレットを作る
                         if(magic_item.fixed!=undefined){
-                            writeString+=`C({${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+${magic_item.fixed})　【${magic_item.name}】\n`;
+                            writeString+=`C({${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+${magic_item.fixed})　【${magic_item.name}】 :MP-${mp}\n`;
                             continue;
                         }
                         //チャットパレットに記述
@@ -347,7 +358,7 @@ function yomikomi(img){
                             }
                             let critical="@"+magic_item.c;
                             if(!magic_item.c) critical="";
-                            writeString+=`${magic_item.iryoku}+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}${critical}　【${magic_item.name}】\n`;
+                            writeString+=`${magic_item.iryoku}+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}${critical}　【${magic_item.name}】 :MP-${mp}\n`;
                         }
                     }
                 }
@@ -368,8 +379,13 @@ function yomikomi(img){
                     writeString+=`\n//-----ウィザード\n2d+{${maxginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使} 【深智魔法行使判定】\n`;
                     for(let i=0;i<magic_list.wizard.length;i++){
                         let magic_item=magic_list.wizard[i];
+                        //mpの計算
+                        let mp=magic_item.mp;
+                        if(jsondata.ST_name.includes(`MP軽減/${magicName_japanese[i]}`)) mp--;
+                        if(Number(jsondata.V_GLv12)>=9) mp--;
+                        if(mp<1) mp=1;
                         if(magic_item.level<=minlv)
-                            writeString+=`${magic_item.iryoku}+{${maxginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}@${magic_item.c}　【${magic_item.name}】\n`;
+                            writeString+=`${magic_item.iryoku}+{${maxginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}@${magic_item.c}　【${magic_item.name}】 :MP-${mp}\n`;
                     }
                 }
             }else{
@@ -463,15 +479,18 @@ function yomikomi(img){
             }
 
             writeString+=`\n</chat-palette>\n</character>`;
+            //+0を消す
             writeString=writeString.replace(/\+0/g,"").replace(/\n{3,}/g,"\n\n");
+            //バフ・デバフのチェックボックスが外れている場合にその部分のチャットパレットを消す
             for(let i=0;i<japanese.length;i++){
                 if(2<=i&&i<=5) continue;
                 if(!document.getElementById(id[i]).checked){
                     let reg=new RegExp("\\+{"+japanese[i]+"}","g");
                     writeString=writeString.replace(reg,"");
                 }
-                    
             }
+            //MP消費をチャットパレットに入れない場合の処理
+            if(!document.getElementById("mp").checked) writeString=writeString.replace(/:MP-\d+/g,"");
 
             let writeString2=[];
             const kizyucheck=document.getElementById("kizyu").checked;
