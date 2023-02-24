@@ -40,6 +40,12 @@ a.makebtn {
 	border-radius: 100vh;
 	transition: 0.5s;
 }
+
+img{
+    width: 500;
+    max-width: 100%;
+}
+
 a.makebtn:hover {
 	color: #27acd9;
 	background: #fff;
