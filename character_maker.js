@@ -28,6 +28,8 @@ async function nameget() {
             if(jsondata.arms_name.length==1&&jsondata.arms_name[0]=="") {
                 document.getElementById("hit").checked=false;
                 document.getElementById("attack").value=0;
+                document.getElementById("buki").checked=false;
+                bukiload(document.getElementById("buki"));
             }
             else {
                 document.getElementById("attack").value=2;
@@ -40,7 +42,7 @@ async function nameget() {
                 let magic="MLv"+magic_numlist[i];
                 let lv=Number(jsondata[magic]);
                 //魔法技能を習得しているかの確認
-                if(!lv) magic_tf=1;
+                if(lv) magic_tf=1;
             }
             if(magic_tf===0) {
                 document.getElementById("magic_kousi").checked=false;
