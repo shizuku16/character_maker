@@ -41,6 +41,7 @@ async function nameget() {
             for(let i=0;i<magic_numlist.length;i++){
                 let magic="MLv"+magic_numlist[i];
                 let lv=Number(jsondata[magic]);
+                console.log(lv)
                 //魔法技能を習得しているかの確認
                 if(lv) magic_tf=1;
             }
@@ -122,6 +123,8 @@ function yomikomi(img){
                     writeString+=`        <data type="numberResource" currentValue="0" name="${japanese[i]}">5</data>\n`;
             }
             if(document.getElementById("damage").checked) writeString+=`\n        <data type="numberResource" currentValue="0" name="ダメージ軽減">5</data>`;
+            writeString+=`\n        <data type="numberResource" currentValue="0" name="行為判定">5</data>`;
+            writeString+=`\n        <data type="numberResource" currentValue="0" name="行動判定">5</data>`;
             writeString+=`\n      </data>\n      <data name="所持品">\n`;
             for(let i=0;i<jsondata.item_name.length;i++){
                 writeString+=`        <data type="numberResource" currentValue="${jsondata.item_num[i]}" name="${jsondata.item_name[i]}">${jsondata.item_num[i]}</data>\n`;
@@ -129,31 +132,31 @@ function yomikomi(img){
             //以下チャットパレット
             writeString+=`      </data>\n    </data>\n  </data>\n  <chat-palette dicebot="SwordWorld2.5">1d\n1d&gt;=4\n2d 【平目】\n\n`;
             if(document.getElementById("damage").checked) writeString+=`//-----ダメージ計算\nC({HP}-()+{防護点}+{ダメージ軽減}) 　【残HP（物理ダメージ）】\nC({HP}-()+{ダメージ軽減})　【残HP（魔法ダメージ）】\nC({MP}-())　【MP消費】`;
-            writeString+=`\n\n//-----冒険者判定\n2d+{冒険者レベル}+({知力}/6) 【真偽判定】\n2d+{冒険者レベル}+({敏捷度}/6) 【跳躍判定】【水泳判定】\n2d+{冒険者レベル}+({筋力}/6) 【登攀判定】【腕力判定】\n\n//-----抵抗力\n`;
+            writeString+=`\n\n//-----冒険者判定\n2d+{冒険者レベル}+({知力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({敏捷度}/6)+{行動判定}+{行為判定} 【跳躍判定】【水泳判定】\n2d+{冒険者レベル}+({筋力}/6)+{行動判定}+{行為判定} 【登攀判定】【腕力判定】\n\n//-----抵抗力\n`;
             let mental_calc=jsondata.mental_resist-jsondata.lv-jsondata.NB6-(jsondata.mental_resist_mod||0);
             let life_calc=jsondata.life_resist-jsondata.lv-jsondata.NB4-(jsondata.life_resist_mod||0);
-            writeString+=`2d+{冒険者レベル}+({生命力}/6)+{生命抵抗}+${jsondata.life_resist_mod||0}+${life_calc} 【生命抵抗力判定】\n2d+{冒険者レベル}+({精神力}/6)+{精神抵抗}+${jsondata.mental_resist_mod||0}+${mental_calc} 【精神抵抗力判定】\n`;
+            writeString+=`2d+{冒険者レベル}+({生命力}/6)+{生命抵抗}+${jsondata.life_resist_mod||0}+${life_calc}+{行為判定} 【生命抵抗力判定】\n2d+{冒険者レベル}+({精神力}/6)+{精神抵抗}+${jsondata.mental_resist_mod||0}+${mental_calc}+{行為判定} 【精神抵抗力判定】\n`;
 
             //チャットパレット(技能依存の判定)
-            if(jsondata.V_GLv10!="0") writeString+=`\n//-----スカウト\n2d+{スカウト}+({器用度}/6) 【スカウト技巧判定】スリ/変装/隠蔽/解除/罠設置\n2d+{スカウト}+({敏捷度}/6) 【スカウト運動判定】先制/受け身/隠密/軽業/登攀/尾行\n2d+{スカウト}+({知力}/6) 【スカウト観察判定】宝物鑑定/足跡追跡/異常感知/聞き耳/危険感知/探索/天候予測/罠回避/地図作製\n`;
-            if(jsondata.V_GLv11!="0") writeString+=`\n//-----レンジャー\n2d+{レンジャー}+({器用度}/6) 【レンジャー技巧判定】応急手当/隠蔽/解除*/罠設置* (*は自然環境のみ)\n2d+{レンジャー}+({敏捷度}/6) 【レンジャー運動判定】受け身/隠密/軽業/登攀/尾行\n2d+{レンジャー}+({知力}/6) 【レンジャー観察判定】病気知識/薬品学/足跡追跡/異常感知*/聞き耳/危険感知/探索*/天候予測/罠回避*/地図作製* (*は自然環境のみ)\nk10+{レンジャー}+({器用度}/6)@13 【救命草】\nk0+{レンジャー}+({器用度}/6)@13 【魔香草】\nk20+{レンジャー}+({知力}/6)@13 【ヒーリングポーション】\nk30+{レンジャー}+({知力}/6)@13 【トリートポーション】\nC({レンジャー}+({知力}/6)) 【魔香水】\n`;
-            if(jsondata.V_GLv12!="0") writeString+=`\n//-----セージ\n2d+{セージ}+({知力}/6) 【セージ知識判定】見識/文献/魔物知識/文明鑑定/宝物鑑定/病気知識/薬品学/地図作製\n`;
-            if(jsondata.V_GLv14!="0") writeString+=`\n//-----バード\n2d+{バード}+({知力}/6) 【見識判定】\n2d+{バード}+({精神力}/6) 【演奏判定】\n`;
+            if(jsondata.V_GLv10!="0") writeString+=`\n//-----スカウト\n2d+{スカウト}+({器用度}/6)+{行動判定}+{行為判定} 【スカウト技巧判定】スリ/変装/隠蔽/解除/罠設置\n2d+{スカウト}+({敏捷度}/6)+{行動判定}+{行為判定} 【スカウト運動判定】先制/受け身/隠密/軽業/登攀/尾行\n2d+{スカウト}+({知力}/6)+{行動判定}+{行為判定} 【スカウト観察判定】宝物鑑定/足跡追跡/異常感知/聞き耳/危険感知/探索/天候予測/罠回避/地図作製\n`;
+            if(jsondata.V_GLv11!="0") writeString+=`\n//-----レンジャー\n2d+{レンジャー}+({器用度}/6)+{行動判定}+{行為判定} 【レンジャー技巧判定】応急手当/隠蔽/解除*/罠設置* (*は自然環境のみ)\n2d+{レンジャー}+({敏捷度}/6)+{行動判定}+{行為判定} 【レンジャー運動判定】受け身/隠密/軽業/登攀/尾行\n2d+{レンジャー}+({知力}/6)+{行動判定}+{行為判定} 【レンジャー観察判定】病気知識/薬品学/足跡追跡/異常感知*/聞き耳/危険感知/探索*/天候予測/罠回避*/地図作製* (*は自然環境のみ)\nk10+{レンジャー}+({器用度}/6)@13 【救命草】\nk0+{レンジャー}+({器用度}/6)@13 【魔香草】\nk20+{レンジャー}+({知力}/6)@13 【ヒーリングポーション】\nk30+{レンジャー}+({知力}/6)@13 【トリートポーション】\nC({レンジャー}+({知力}/6)) 【魔香水】\n`;
+            if(jsondata.V_GLv12!="0") writeString+=`\n//-----セージ\n2d+{セージ}+({知力}/6)+{行動判定}+{行為判定} 【セージ知識判定】見識/文献/魔物知識/文明鑑定/宝物鑑定/病気知識/薬品学/地図作製\n`;
+            if(jsondata.V_GLv14!="0") writeString+=`\n//-----バード\n2d+{バード}+({知力}/6)+{行動判定}+{行為判定} 【見識判定】\n2d+{バード}+({精神力}/6)+{行動判定}+{行為判定} 【演奏判定】\n`;
             if(jsondata.V_GLv16!="0") {
-                writeString+=`\n//-----ライダー\n2d+{ライダー}+({器用度}/6) 【応急手当判定】\n2d+{ライダー}+({敏捷度}/6) 【ライダー運動判定】受け身/騎乗\n2d+{ライダー}+({知力}/6) 【ライダー知識判定】弱点隠蔽/魔物知識*/地図作製 (*弱点不可)\n2d+{ライダー}+({知力}/6) 【ライダー観察判定*】足跡追跡/異常感知/危険感知/探索/罠回避 (*要【探索指令】)\n`;
-                if(document.getElementById("riderseisin").checked) writeString+=`2d+{ライダー}+({精神力}/6) 【ライダー精神力】威嚇/騎獣特殊能力 \n`
+                writeString+=`\n//-----ライダー\n2d+{ライダー}+({器用度}/6)+{行動判定}+{行為判定} 【応急手当判定】\n2d+{ライダー}+({敏捷度}/6)+{行動判定}+{行為判定} 【ライダー運動判定】受け身/騎乗\n2d+{ライダー}+({知力}/6)+{行動判定}+{行為判定} 【ライダー知識判定】弱点隠蔽/魔物知識*/地図作製 (*弱点不可)\n2d+{ライダー}+({知力}/6)+{行動判定}+{行為判定} 【ライダー観察判定*】足跡追跡/異常感知/危険感知/探索/罠回避 (*要【探索指令】)\n`;
+                if(document.getElementById("riderseisin").checked) writeString+=`2d+{ライダー}+({精神力}/6)+{行動判定}+{行為判定} 【ライダー精神力】威嚇/騎獣特殊能力 \n`
             }
-            if(jsondata.V_GLv15!="0") writeString+=`\n//-----アルケミスト\n2d+{アルケミスト}+({知力}/6) 【アルケミスト知識判定】見識/文献/薬品学\n2d+{アルケミスト}+({知力}/6) 【賦術判定】\n`;
+            if(jsondata.V_GLv15!="0") writeString+=`\n//-----アルケミスト\n2d+{アルケミスト}+({知力}/6)+{行動判定}+{行為判定} 【アルケミスト知識判定】見識/文献/薬品学\n2d+{アルケミスト}+({知力}/6)+{行動判定}+{行為判定} 【賦術判定】\n`;
             if(jsondata.V_GLv10!="0"||jsondata.V_GLv12!="0"||jsondata.V_GLv16!="0"||jsondata.V_GLv18!="0") writeString+=`\n//-----戦闘準備\n`;
-            if(jsondata.V_GLv10!="0") writeString+=`2d+{スカウト}+({敏捷度}/6)+${jsondata.sensei_mod||0} 【先制判定】\n`;
-            if(jsondata.V_GLv18!="0") writeString+=`2d+{ウォーリーダー}+({敏捷度}/6)+${jsondata.sensei_mod||0} 【先制判定】\n`;
-            if(jsondata.V_GLv18!="0"&&jsondata.Sensei_INT_Bonus=="1") writeString+=`2d+{ウォーリーダー}+({知力}/6)+${jsondata.sensei_mod||1} 【先制判定】\n`;
-            if(jsondata.V_GLv12!="0") writeString+=`2d+{セージ}+({知力}/6)+${jsondata.mamono_chishiki_mod||0} 【魔物知識判定】\n`;
-            if(jsondata.V_GLv16!="0") writeString+=`2d+{ライダー}+({知力}/6)+${jsondata.mamono_chishiki_mod||0} 【魔物知識判定*】 (*弱点不可)`;
+            if(jsondata.V_GLv10!="0") writeString+=`2d+{スカウト}+({敏捷度}/6)+${jsondata.sensei_mod||0}+{行動判定}+{行為判定} 【先制判定】\n`;
+            if(jsondata.V_GLv18!="0") writeString+=`2d+{ウォーリーダー}+({敏捷度}/6)+${jsondata.sensei_mod||0}+{行動判定}+{行為判定} 【先制判定】\n`;
+            if(jsondata.V_GLv18!="0"&&jsondata.Sensei_INT_Bonus=="1") writeString+=`2d+{ウォーリーダー}+({知力}/6)+${jsondata.sensei_mod||1}+{行動判定}+{行為判定} 【先制判定】\n`;
+            if(jsondata.V_GLv12!="0") writeString+=`2d+{セージ}+({知力}/6)+${jsondata.mamono_chishiki_mod||0}+{行動判定}+{行為判定} 【魔物知識判定】\n`;
+            if(jsondata.V_GLv16!="0") writeString+=`2d+{ライダー}+({知力}/6)+${jsondata.mamono_chishiki_mod||0}+{行動判定}+{行為判定} 【魔物知識判定*】 (*弱点不可)`;
 
             writeString+=`\n\n//-----回避\n`;
-            if(jsondata.kaihi_ginou_name) writeString+=`2d+{${jsondata.kaihi_ginou_name}}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0} 【回避力判定】\n`;
-            else writeString+=`2d+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0} 【回避力判定】\n`;
+            if(jsondata.kaihi_ginou_name) writeString+=`2d+{${jsondata.kaihi_ginou_name}}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
+            else writeString+=`2d+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
 
 
             //チャットパレット(武器)
@@ -172,7 +175,7 @@ function yomikomi(img){
                     if(!ginou) continue;
                     if(document.getElementById("buki").checked){
                         temporary+=`\n//-----${buki}`;
-                        temporary+=`\n2d+{${ginou}}+${hit}+{命中} 【命中力判定】${buki}`;
+                        temporary+=`\n2d+{${ginou}}+${hit}+{命中}+{行動判定}+{行為判定} 【命中力判定】${buki}`;
                         temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical} 【威力】${buki}`;
                         if(document.getElementById("kurirei").checked)
                             temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
@@ -186,7 +189,7 @@ function yomikomi(img){
                     let attackstring="";
                     for(let i=0;i<document.getElementById("attack").value;i++) attackstring+=`+{攻撃${i+1}}`;
                     temporary=temporary.replace(/\+{攻撃}/g,attackstring);
-                    if(jsondata.arms_cate[i]=="ガン") temporary=temporary.replace(/筋力/g,"知力")
+                    if(jsondata.arms_cate[i]=="ガン")　temporary=temporary.replace(/{シューター}\+{筋力}/g,"{マギテック}+{知力}")
                     writeString+=temporary;
                     
                 }
@@ -333,7 +336,7 @@ function yomikomi(img){
                     let ginou=ginou_list[magic_numlist[i]-1];
                     //魔法技能を習得しているかの確認
                     if(!lv) continue;
-                    writeString+=`\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使} 【${magicName_list[i]}行使判定】\n`;
+                    writeString+=`\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使}+{行動判定}+{行為判定} 【${magicName_list[i]}行使判定】\n`;
                     for(let j=0;j<magic_list[magic_numlist[i]].length;j++){
                         //魔法の詳細をmagic_itemに代入
                         let magic_item=magic_list[magic_numlist[i]][j];
@@ -342,6 +345,7 @@ function yomikomi(img){
                         if(jsondata.ST_name.includes(`MP軽減/${magicName_japanese[i]}`)) mp--;
                         if(Number(jsondata.V_GLv12)>=9) mp--;
                         if(mp<1) mp=1;
+                        if(!mp) mp=0;
                         //妖精魔法でチェックのついていない場合の処理
                         if(i==3&&!magic_item.line){
                             if(!document.getElementById(magic_item.attribute).checked)
@@ -365,6 +369,8 @@ function yomikomi(img){
                     }
                 }
                 writeString=writeString.replace(/k50\+.*?【アースクェイク】/,"C(50+{魔法威力})　【アースクェイク】");
+                writeString=writeString.replace(/k(\d+)\+.*?(【ナチュラルパワー2?】)/g,"k$1@13　$2");
+                writeString=writeString.replace(/:MP-0/g,"");
 
                 //チャットパレット(ウィザード)
                 if(jsondata.V_GLv5!="0"&&jsondata.V_GLv6!="0"){
@@ -378,7 +384,7 @@ function yomikomi(img){
                         minginou=ginou_list[5];
                         maxginou=ginou_list[4];
                     }
-                    writeString+=`\n//-----ウィザード\n2d+{${maxginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使} 【深智魔法行使判定】\n`;
+                    writeString+=`\n//-----ウィザード\n2d+{${maxginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使}+{行動判定}+{行為判定} 【深智魔法行使判定】\n`;
                     for(let i=0;i<magic_list.wizard.length;i++){
                         let magic_item=magic_list.wizard[i];
                         //mpの計算
@@ -396,7 +402,7 @@ function yomikomi(img){
                     let lv=Number(jsondata[magic]);
                     let ginou=ginou_list[magic_numlist[i]-1];
                     if(!lv) continue;
-                    writeString+=`\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使} 【${magicName_list[i]}行使判定】\n`;
+                    writeString+=`\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使}+{行動判定}+{行為判定} 【${magicName_list[i]}行使判定】\n`;
                     for(let j=0;j<=100;j+=10){
                         writeString+=`k${j}+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}　【${magicName_list[i]}威力${j}】\n`;
                     }
@@ -409,7 +415,7 @@ function yomikomi(img){
                     if(minlv==Number(jsondata["MLv5"])) maxginou=ginou_list[5];
                     else maxginou=ginou_list[4];
 
-                    writeString+=`\n//-----ウィザード\n2d+{${maxginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使} 【深智魔法行使判定】\n`;
+                    writeString+=`\n//-----ウィザード\n2d+{${maxginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使}+{行動判定}+{行為判定} 【深智魔法行使判定】\n`;
                     for(let i=0;i<=100;i+=10){
                         writeString+=`k${i}+{${maxginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}　【深智魔法威力${j}】\n`;
                     }
@@ -438,14 +444,14 @@ function yomikomi(img){
 
             //チャットパレット(呪歌)
             if(jsondata.V_GLv14!="0") {
-                let zyuka=`\n//-----呪歌\n2d+{バード}+({精神力}/6) 【演奏判定】\nk10+{バード}+({精神力}/6) 【終律威力10】\nk20+{バード}+({精神力}/6) 【終律威力20】\nk30+{バード}+({精神力}/6) 【終律威力30】\nk0+{バード}+({精神力}/6)@13 【終律回復0】\nk10+{バード}+({精神力}/6)@13 【終律回復10】\nk20+{バード}+({精神力}/6)@13 【終律回復20】\nk30+{バード}+({精神力}/6)@13 【終律回復30】\nk40+{バード}+({精神力}/6)@13 【終律回復40】\n`;
+                let zyuka=`\n//-----呪歌\n2d+{バード}+({精神力}/6)+{行動判定}+{行為判定} 【演奏判定】\nk10+{バード}+({精神力}/6) 【終律威力10】\nk20+{バード}+({精神力}/6) 【終律威力20】\nk30+{バード}+({精神力}/6) 【終律威力30】\nk0+{バード}+({精神力}/6)@13 【終律回復0】\nk10+{バード}+({精神力}/6)@13 【終律回復10】\nk20+{バード}+({精神力}/6)@13 【終律回復20】\nk30+{バード}+({精神力}/6)@13 【終律回復30】\nk40+{バード}+({精神力}/6)@13 【終律回復40】\n`;
                 if(jsondata.is_juka_senyou=="1") zyuka=zyuka.replace(/\{精神力\}/g,"({精神力}+2)");
                 writeString+=zyuka;
             }
 
             //チャットパレット(騎芸)
             if(jsondata.V_GLv16!="0"){
-                writeString+=`\n//-----騎芸\n2d+{ライダー}+({敏捷度}/6) 【騎乗判定】\n2d+{ライダー}+({知力}/6) 【弱点隠蔽判定】\n`;
+                writeString+=`\n//-----騎芸\n2d+{ライダー}+({敏捷度}/6)+{行動判定}+{行為判定} 【騎乗判定】\n2d+{ライダー}+({知力}/6)+{行動判定}+{行為判定} 【弱点隠蔽判定】\n`;
                 for(let i=0;i<jsondata.KG_name.length;i++){
                     if(!jsondata.KG_name[i]) continue;
                     writeString+=`《${jsondata.KG_name[i]}》${jsondata.KG_kouka[i]}\n`;
