@@ -18,10 +18,10 @@ async function nameget() {
             let header = document.getElementById('name');
 		    header.textContent = '';
 		    header.insertAdjacentHTML('afterbegin',`　タイトル：${jsondata.data_title}`);
-            if(jsondata.V_GLv16!="0") document.getElementById("rider").hidden=false;
+            if(Number(jsondata.V_GLv16)>0) document.getElementById("rider").hidden=false;
             else document.getElementById("rider").hidden=true;
 
-            if(jsondata.V_GLv8!="0") document.getElementById("fairy").hidden=false;
+            if(Number(jsondata.V_GLv8)>0) document.getElementById("fairy").hidden=false;
             else document.getElementById("fairy").hidden=true;
 
             //武器がないなら命中バフをなくす。そうでないなら攻撃バフを２にする。
@@ -41,7 +41,6 @@ async function nameget() {
             for(let i=0;i<magic_numlist.length;i++){
                 let magic="MLv"+magic_numlist[i];
                 let lv=Number(jsondata[magic]);
-                console.log(lv)
                 //魔法技能を習得しているかの確認
                 if(lv) magic_tf=1;
             }
@@ -98,9 +97,9 @@ function yomikomi(img){
             let writeString=`<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<character location.name=\"table\" location.x=\"0\" location.y=\"0\" posZ=\"0\" rotate=\"0\" roll=\"0\">\n  <data name=\"character\">\n    ${img}\n    <data name=\"common\">\n      <data name=\"name\">${jsondata.pc_name}`;
             writeString+=`</data>\n      <data name="size">1</data>\n      <data name="URL">${url}</data>\n    </data>\n    <data name="detail">\n      <data name="リソース">\n        <data type="numberResource" currentValue="${hp}" name="HP">${hp}</data>\n        <data type="numberResource" currentValue="${mp}" name="MP">${mp}</data>\n        <data type="numberResource" currentValue="${bougo}" name="防護点">${bougo}</data>\n`;
             writeString+=`        <data type="numberResource" currentValue="0" name="1ゾロ">10</data>\n`
-            if(jsondata.V_GLv14!="0") writeString+=`        <data name="楽素">\n          <data name="高揚" type="numberResource" currentValue="0">10</data>\n          <data name="鎮静" type="numberResource" currentValue="0">10</data>\n          <data name="魅惑" type="numberResource" currentValue="0">10</data>\n        </data>\n`;
-            if(jsondata.V_GLv25!="0") writeString+=`        <data name="命脈点">\n          <data name="天" type="numberResource" currentValue="0">4</data>\n          <data name="地" type="numberResource" currentValue="0">4</data>\n          <data name="人" type="numberResource" currentValue="0">4</data>\n        </data>\n`;
-            if(jsondata.V_GLv18!="0") writeString+=`        <data type="numberResource" currentValue="0" name="陣気">10</data>\n`;
+            if(Number(jsondata.V_GLv14)>0) writeString+=`        <data name="楽素">\n          <data name="高揚" type="numberResource" currentValue="0">10</data>\n          <data name="鎮静" type="numberResource" currentValue="0">10</data>\n          <data name="魅惑" type="numberResource" currentValue="0">10</data>\n        </data>\n`;
+            if(Number(jsondata.V_GLv25)>0) writeString+=`        <data name="命脈点">\n          <data name="天" type="numberResource" currentValue="0">4</data>\n          <data name="地" type="numberResource" currentValue="0">4</data>\n          <data name="人" type="numberResource" currentValue="0">4</data>\n        </data>\n`;
+            if(Number(jsondata.V_GLv18)>0) writeString+=`        <data type="numberResource" currentValue="0" name="陣気">10</data>\n`;
             writeString+=`      </data>\n      <data name="能力値">\n        <data name="器用度">${jsondata.NP1}</data>\n        <data name="敏捷度">${jsondata.NP2}</data>\n        <data name="筋力">${jsondata.NP3}</data>\n        <data name="生命力">${jsondata.NP4}</data>\n        <data name="知力">${jsondata.NP5}</data>\n        <data name="精神力">${jsondata.NP6}</data>\n      </data>\n`;
             writeString+=`      <data name="技能">\n        <data name="冒険者レベル">${jsondata.lv}</data>\n`;
             for(let i=1;i<=26;i++){
@@ -138,21 +137,21 @@ function yomikomi(img){
             writeString+=`2d+{冒険者レベル}+({生命力}/6)+{生命抵抗}+${jsondata.life_resist_mod||0}+${life_calc}+{行為判定} 【生命抵抗力判定】\n2d+{冒険者レベル}+({精神力}/6)+{精神抵抗}+${jsondata.mental_resist_mod||0}+${mental_calc}+{行為判定} 【精神抵抗力判定】\n`;
 
             //チャットパレット(技能依存の判定)
-            if(jsondata.V_GLv10!="0") writeString+=`\n//-----スカウト\n2d+{スカウト}+({器用度}/6)+{行動判定}+{行為判定} 【スカウト技巧判定】スリ/変装/隠蔽/解除/罠設置\n2d+{スカウト}+({敏捷度}/6)+{行動判定}+{行為判定} 【スカウト運動判定】先制/受け身/隠密/軽業/登攀/尾行\n2d+{スカウト}+({知力}/6)+{行動判定}+{行為判定} 【スカウト観察判定】宝物鑑定/足跡追跡/異常感知/聞き耳/危険感知/探索/天候予測/罠回避/地図作製\n`;
-            if(jsondata.V_GLv11!="0") writeString+=`\n//-----レンジャー\n2d+{レンジャー}+({器用度}/6)+{行動判定}+{行為判定} 【レンジャー技巧判定】応急手当/隠蔽/解除*/罠設置* (*は自然環境のみ)\n2d+{レンジャー}+({敏捷度}/6)+{行動判定}+{行為判定} 【レンジャー運動判定】受け身/隠密/軽業/登攀/尾行\n2d+{レンジャー}+({知力}/6)+{行動判定}+{行為判定} 【レンジャー観察判定】病気知識/薬品学/足跡追跡/異常感知*/聞き耳/危険感知/探索*/天候予測/罠回避*/地図作製* (*は自然環境のみ)\nk10+{レンジャー}+({器用度}/6)@13 【救命草】\nk0+{レンジャー}+({器用度}/6)@13 【魔香草】\nk20+{レンジャー}+({知力}/6)@13 【ヒーリングポーション】\nk30+{レンジャー}+({知力}/6)@13 【トリートポーション】\nC({レンジャー}+({知力}/6)) 【魔香水】\n`;
-            if(jsondata.V_GLv12!="0") writeString+=`\n//-----セージ\n2d+{セージ}+({知力}/6)+{行動判定}+{行為判定} 【セージ知識判定】見識/文献/魔物知識/文明鑑定/宝物鑑定/病気知識/薬品学/地図作製\n`;
-            if(jsondata.V_GLv14!="0") writeString+=`\n//-----バード\n2d+{バード}+({知力}/6)+{行動判定}+{行為判定} 【見識判定】\n2d+{バード}+({精神力}/6)+{行動判定}+{行為判定} 【演奏判定】\n`;
-            if(jsondata.V_GLv16!="0") {
+            if(Number(jsondata.V_GLv10)>0) writeString+=`\n//-----スカウト\n2d+{スカウト}+({器用度}/6)+{行動判定}+{行為判定} 【スカウト技巧判定】スリ/変装/隠蔽/解除/罠設置\n2d+{スカウト}+({敏捷度}/6)+{行動判定}+{行為判定} 【スカウト運動判定】先制/受け身/隠密/軽業/登攀/尾行\n2d+{スカウト}+({知力}/6)+{行動判定}+{行為判定} 【スカウト観察判定】宝物鑑定/足跡追跡/異常感知/聞き耳/危険感知/探索/天候予測/罠回避/地図作製\n`;
+            if(Number(jsondata.V_GLv11)>0) writeString+=`\n//-----レンジャー\n2d+{レンジャー}+({器用度}/6)+{行動判定}+{行為判定} 【レンジャー技巧判定】応急手当/隠蔽/解除*/罠設置* (*は自然環境のみ)\n2d+{レンジャー}+({敏捷度}/6)+{行動判定}+{行為判定} 【レンジャー運動判定】受け身/隠密/軽業/登攀/尾行\n2d+{レンジャー}+({知力}/6)+{行動判定}+{行為判定} 【レンジャー観察判定】病気知識/薬品学/足跡追跡/異常感知*/聞き耳/危険感知/探索*/天候予測/罠回避*/地図作製* (*は自然環境のみ)\nk10+{レンジャー}+({器用度}/6)@13 【救命草】\nk0+{レンジャー}+({器用度}/6)@13 【魔香草】\nk20+{レンジャー}+({知力}/6)@13 【ヒーリングポーション】\nk30+{レンジャー}+({知力}/6)@13 【トリートポーション】\nC({レンジャー}+({知力}/6)) 【魔香水】\n`;
+            if(Number(jsondata.V_GLv12)>0) writeString+=`\n//-----セージ\n2d+{セージ}+({知力}/6)+{行動判定}+{行為判定} 【セージ知識判定】見識/文献/魔物知識/文明鑑定/宝物鑑定/病気知識/薬品学/地図作製\n`;
+            if(Number(jsondata.V_GLv14)>0) writeString+=`\n//-----バード\n2d+{バード}+({知力}/6)+{行動判定}+{行為判定} 【見識判定】\n2d+{バード}+({精神力}/6)+{行動判定}+{行為判定} 【演奏判定】\n`;
+            if(Number(jsondata.V_GLv16)>0) {
                 writeString+=`\n//-----ライダー\n2d+{ライダー}+({器用度}/6)+{行動判定}+{行為判定} 【応急手当判定】\n2d+{ライダー}+({敏捷度}/6)+{行動判定}+{行為判定} 【ライダー運動判定】受け身/騎乗\n2d+{ライダー}+({知力}/6)+{行動判定}+{行為判定} 【ライダー知識判定】弱点隠蔽/魔物知識*/地図作製 (*弱点不可)\n2d+{ライダー}+({知力}/6)+{行動判定}+{行為判定} 【ライダー観察判定*】足跡追跡/異常感知/危険感知/探索/罠回避 (*要【探索指令】)\n`;
                 if(document.getElementById("riderseisin").checked) writeString+=`2d+{ライダー}+({精神力}/6)+{行動判定}+{行為判定} 【ライダー精神力】威嚇/騎獣特殊能力 \n`
             }
-            if(jsondata.V_GLv15!="0") writeString+=`\n//-----アルケミスト\n2d+{アルケミスト}+({知力}/6)+{行動判定}+{行為判定} 【アルケミスト知識判定】見識/文献/薬品学\n2d+{アルケミスト}+({知力}/6)+{行動判定}+{行為判定} 【賦術判定】\n`;
-            if(jsondata.V_GLv10!="0"||jsondata.V_GLv12!="0"||jsondata.V_GLv16!="0"||jsondata.V_GLv18!="0") writeString+=`\n//-----戦闘準備\n`;
-            if(jsondata.V_GLv10!="0") writeString+=`2d+{スカウト}+({敏捷度}/6)+${jsondata.sensei_mod||0}+{行動判定}+{行為判定} 【先制判定】\n`;
-            if(jsondata.V_GLv18!="0") writeString+=`2d+{ウォーリーダー}+({敏捷度}/6)+${jsondata.sensei_mod||0}+{行動判定}+{行為判定} 【先制判定】\n`;
-            if(jsondata.V_GLv18!="0"&&jsondata.Sensei_INT_Bonus=="1") writeString+=`2d+{ウォーリーダー}+({知力}/6)+${jsondata.sensei_mod||1}+{行動判定}+{行為判定} 【先制判定】\n`;
-            if(jsondata.V_GLv12!="0") writeString+=`2d+{セージ}+({知力}/6)+${jsondata.mamono_chishiki_mod||0}+{行動判定}+{行為判定} 【魔物知識判定】\n`;
-            if(jsondata.V_GLv16!="0") writeString+=`2d+{ライダー}+({知力}/6)+${jsondata.mamono_chishiki_mod||0}+{行動判定}+{行為判定} 【魔物知識判定*】 (*弱点不可)`;
+            if(Number(jsondata.V_GLv15)>0) writeString+=`\n//-----アルケミスト\n2d+{アルケミスト}+({知力}/6)+{行動判定}+{行為判定} 【アルケミスト知識判定】見識/文献/薬品学\n2d+{アルケミスト}+({知力}/6)+{行動判定}+{行為判定} 【賦術判定】\n`;
+            if(Number(jsondata.V_GLv10)>0||Number(jsondata.V_GLv12)>0||Number(jsondata.V_GLv16)>0||Number(jsondata.V_GLv18)>0) writeString+=`\n//-----戦闘準備\n`;
+            if(Number(jsondata.V_GLv10)>0) writeString+=`2d+{スカウト}+({敏捷度}/6)+${jsondata.sensei_mod||0}+{行動判定}+{行為判定} 【先制判定】\n`;
+            if(Number(jsondata.V_GLv18)>0) writeString+=`2d+{ウォーリーダー}+({敏捷度}/6)+${jsondata.sensei_mod||0}+{行動判定}+{行為判定} 【先制判定】\n`;
+            if(Number(jsondata.V_GLv18)>0&&jsondata.Sensei_INT_Bonus=="1") writeString+=`2d+{ウォーリーダー}+({知力}/6)+${jsondata.sensei_mod||1}+{行動判定}+{行為判定} 【先制判定】\n`;
+            if(Number(jsondata.V_GLv12)>0) writeString+=`2d+{セージ}+({知力}/6)+${jsondata.mamono_chishiki_mod||0}+{行動判定}+{行為判定} 【魔物知識判定】\n`;
+            if(Number(jsondata.V_GLv16)>0) writeString+=`2d+{ライダー}+({知力}/6)+${jsondata.mamono_chishiki_mod||0}+{行動判定}+{行為判定} 【魔物知識判定*】 (*弱点不可)`;
 
             writeString+=`\n\n//-----回避\n`;
             if(jsondata.kaihi_ginou_name) writeString+=`2d+{${jsondata.kaihi_ginou_name}}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
@@ -373,7 +372,7 @@ function yomikomi(img){
                 writeString=writeString.replace(/:MP-0/g,"");
 
                 //チャットパレット(ウィザード)
-                if(jsondata.V_GLv5!="0"&&jsondata.V_GLv6!="0"){
+                if(Number(jsondata.V_GLv5)>0&&Number(jsondata.V_GLv6)>0){
                     let minlv=Math.min(Number(jsondata["MLv5"]),Number(jsondata["MLv6"]));
                     let minginou;
                     let maxginou;
@@ -409,7 +408,7 @@ function yomikomi(img){
                 }
 
                 //チャットパレット(ウィザード)
-                if(jsondata.V_GLv5!="0"&&jsondata.V_GLv6!="0"){
+                if(Number(jsondata.V_GLv5)>0&&Number(jsondata.V_GLv6)>0){
                     let minlv=Math.min(Number(jsondata["MLv5"]),Number(jsondata["MLv6"]));
                     let maxginou;
                     if(minlv==Number(jsondata["MLv5"])) maxginou=ginou_list[5];
@@ -431,7 +430,7 @@ function yomikomi(img){
             }
 
             //チャットパレット(錬技)
-            if(jsondata.V_GLv13!="0"){ 
+            if(Number(jsondata.V_GLv13)>0){ 
                 let breath="";
                 writeString+=`\n//-----練技\n`;
                 for(let i=0;i<jsondata.ES_name.length;i++){
@@ -443,14 +442,14 @@ function yomikomi(img){
             }
 
             //チャットパレット(呪歌)
-            if(jsondata.V_GLv14!="0") {
+            if(Number(jsondata.V_GLv14)>0) {
                 let zyuka=`\n//-----呪歌\n2d+{バード}+({精神力}/6)+{行動判定}+{行為判定} 【演奏判定】\nk10+{バード}+({精神力}/6) 【終律威力10】\nk20+{バード}+({精神力}/6) 【終律威力20】\nk30+{バード}+({精神力}/6) 【終律威力30】\nk0+{バード}+({精神力}/6)@13 【終律回復0】\nk10+{バード}+({精神力}/6)@13 【終律回復10】\nk20+{バード}+({精神力}/6)@13 【終律回復20】\nk30+{バード}+({精神力}/6)@13 【終律回復30】\nk40+{バード}+({精神力}/6)@13 【終律回復40】\n`;
                 if(jsondata.is_juka_senyou=="1") zyuka=zyuka.replace(/\{精神力\}/g,"({精神力}+2)");
                 writeString+=zyuka;
             }
 
             //チャットパレット(騎芸)
-            if(jsondata.V_GLv16!="0"){
+            if(Number(jsondata.V_GLv16)>0){
                 writeString+=`\n//-----騎芸\n2d+{ライダー}+({敏捷度}/6)+{行動判定}+{行為判定} 【騎乗判定】\n2d+{ライダー}+({知力}/6)+{行動判定}+{行為判定} 【弱点隠蔽判定】\n`;
                 for(let i=0;i<jsondata.KG_name.length;i++){
                     if(!jsondata.KG_name[i]) continue;
@@ -459,7 +458,7 @@ function yomikomi(img){
             }
 
             //チャットパレット(賦術)
-            if(jsondata.V_GLv15!="0"){
+            if(Number(jsondata.V_GLv15)>0){
                 writeString+=`\n//-----賦術\n`;
                 for(let i=0;i<jsondata.HJ_name.length;i++){
                     if(!jsondata.HJ_name[i])continue;
@@ -468,7 +467,7 @@ function yomikomi(img){
             }
 
             //チャットパレット(鼓咆)
-            if(jsondata.V_GLv18!="0"){
+            if(Number(jsondata.V_GLv18)>0){
                 writeString+=`\n//-----鼓咆\n`;
                 for(let i=0;i<jsondata.HO_name.length;i++){
                     if(!jsondata.HO_name[i]) continue;
@@ -478,7 +477,7 @@ function yomikomi(img){
             }
 
             //チャットパレット(相域)
-            if(jsondata.V_GLv25!="0"){
+            if(Number(jsondata.V_GLv25)>0){
                 writeString+=`\n//-----相域\n`;
                 for(let i=0;i<jsondata.GEM_name.length;i++){
                     if(!jsondata.GEM_name[i]) continue;
