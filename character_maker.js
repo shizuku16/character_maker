@@ -37,7 +37,7 @@ async function nameget() {
             }
             
             let magic_tf=0;
-            const magic_numlist=[5,6,7,8,9,17,24];
+            const magic_numlist=[5,6,7,8,9,17,24,21];
             for(let i=0;i<magic_numlist.length;i++){
                 let magic="MLv"+magic_numlist[i];
                 let lv=Number(jsondata[magic]);
@@ -93,7 +93,7 @@ function yomikomi(img){
             const hp=jsondata.HP;
             const mp=jsondata.MP;
             const bougo=jsondata.bougo;
-            const ginou_list=["ファイター","グラップラー","フェンサー","シューター","ソーサラー","コンジャラー",`プリースト/${jsondata.priest_sinkou}`,"フェアリーテイマー","マギテック","スカウト","レンジャー","セージ","エンハンサー","バード","アルケミスト","ライダー","デーモンルーラー","ウォーリーダー","ミスティック","グリモワール","アーティザン","アリストクラシー","","ドルイド","ジオマンサー","バトルダンサー"];
+            const ginou_list=["ファイター","グラップラー","フェンサー","シューター","ソーサラー","コンジャラー",`プリースト/${jsondata.priest_sinkou}`,"フェアリーテイマー","マギテック","スカウト","レンジャー","セージ","エンハンサー","バード","アルケミスト","ライダー","デーモンルーラー","ウォーリーダー","ミスティック","フィジカルマスターx","ヒーロー","アーティザン","アリストクラシー","ドルイド","ジオマンサー","バトルダンサー"];
             let writeString=`<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<character location.name=\"table\" location.x=\"0\" location.y=\"0\" posZ=\"0\" rotate=\"0\" roll=\"0\">\n  <data name=\"character\">\n    ${img}\n    <data name=\"common\">\n      <data name=\"name\">${jsondata.pc_name}`;
             writeString+=`</data>\n      <data name="size">1</data>\n      <data name="URL">${url}</data>\n    </data>\n    <data name="detail">\n      <data name="リソース">\n        <data type="numberResource" currentValue="${hp}" name="HP">${hp}</data>\n        <data type="numberResource" currentValue="${mp}" name="MP">${mp}</data>\n        <data type="numberResource" currentValue="${bougo}" name="防護点">${bougo}</data>\n`;
             writeString+=`        <data type="numberResource" currentValue="0" name="1ゾロ">10</data>\n`
@@ -155,6 +155,7 @@ function yomikomi(img){
 
             writeString+=`\n\n//-----回避\n`;
             if(jsondata.kaihi_ginou_name) writeString+=`2d+{${jsondata.kaihi_ginou_name}}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
+            else if(Number(jsondata.V_GLv21)>0) writeString+=`2d+{ヒーロー}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
             else writeString+=`2d+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
 
 
@@ -171,7 +172,10 @@ function yomikomi(img){
                     let temporary="";
                     if(jsondata.arms_is_senyou[i]==1) hit=`({器用度}+2)/6`;
                     hit+=`+${jsondata.arms_hit_mod[i]||0}+${jsondata.arms_hit_tokugi||0}`;
-                    if(!ginou) continue;
+                    if(!ginou) {
+                        if(Number(jsondata.V_GLv21)>0) ginou="ヒーロー";
+                        else continue;
+                    }
                     if(document.getElementById("buki").checked){
                         temporary+=`\n//-----${buki}`;
                         temporary+=`\n2d+{${ginou}}+${hit}+{命中}+{行動判定}+{行為判定} 【命中力判定】${buki}`;
@@ -195,9 +199,9 @@ function yomikomi(img){
             }
 
             //チャットパレット(魔法)
-            const magic_numlist=[5,6,7,8,9,17,24];
-            const magicName_list=["真語魔法","操霊魔法","神聖魔法","妖精魔法","魔動機術","召異魔法","森羅魔法"];
-            const magicName_japanese=["ソーサラー","コンジャラー","プリースト","フェアリーテイマー","マギテック","デーモンルーラー","ドルイド"];
+            const magic_numlist=[5,6,7,8,9,17,24,21];
+            const magicName_list=["真語魔法","操霊魔法","神聖魔法","妖精魔法","魔動機術","召異魔法","森羅魔法","英雄魔法"];
+            const magicName_japanese=["ソーサラー","コンジャラー","プリースト","フェアリーテイマー","マギテック","デーモンルーラー","ドルイド","ヒーロー"];
             const magic_list={
                 5:[
                     {level:1,iryoku:"k10",name:"エネルギー・ボルト",c:10,mp:5},
@@ -311,8 +315,21 @@ function yomikomi(img){
                     {level:15,iryoku:"dru[24,27,30]",name:"ダブルストンプ",mp:24},
                     {level:15,iryoku:"k50",name:"ブレイズシャワー",c:10,mp:16},
                     {level:1,line:true},
-                    {level:2,iryoku:"k10",name:"ナチュラルパワー",c:13},
-                    {level:12,iryoku:"k30",name:"ナチュラルパワー2",c:13},
+                    {level:2,iryoku:"k10",name:"ナチュラルパワー",c:13,onlyk:true},
+                    {level:12,iryoku:"k30",name:"ナチュラルパワー2",c:13,onlyk:true},
+                ],
+                21:[
+                    {level:1,iryoku:"k10",name:"ヒーローアライブ",mp:3,c:13},
+                    {level:2,iryoku:"k10",name:"ミラージュソード(追撃)",c:13,onlyk:true},
+                    {level:3,iryoku:"k10",name:"リンクサンダー",mp:7,c:10},
+                    {level:3,iryoku:"k10",name:"リンクサンダー(追撃)",onlyk:true},
+                    {level:4,iryoku:"k20",name:"パワーブレイク",mp:4,c:10},
+                    {level:5,iryoku:"k20",name:"スピードブレイク",mp:4,c:10},
+                    {level:6,iryoku:"k20",name:"ガードブレイク",mp:7,c:10},
+                    {level:10,iryoku:"k10",name:"ガードラッシュ",mp:16,c:13},
+                    {level:11,iryoku:"k10",name:"リンクスマッシュ(追撃)",c:10,up:2},
+                    {level:11,iryoku:"k40",name:"フルブレイク",mp:16,c:10},
+                    {level:10,iryoku:"k100",name:"レジメントレイブ",mp:32,c:8},
                 ],
                 wizard:[
                     {level:4,iryoku:"k20",name:"トキシック・ブリーズ",c:10,mp:7},
@@ -335,7 +352,7 @@ function yomikomi(img){
                     let ginou=ginou_list[magic_numlist[i]-1];
                     //魔法技能を習得しているかの確認
                     if(!lv) continue;
-                    writeString+=`\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使}+{行動判定}+{行為判定} 【${magicName_list[i]}行使判定】\n`;
+                    writeString+=`\n\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使}+{行動判定}+{行為判定} 【${magicName_list[i]}行使判定】\n`;
                     for(let j=0;j<magic_list[magic_numlist[i]].length;j++){
                         //魔法の詳細をmagic_itemに代入
                         let magic_item=magic_list[magic_numlist[i]][j];
@@ -345,6 +362,8 @@ function yomikomi(img){
                         if(Number(jsondata.V_GLv12)>=9) mp--;
                         if(mp<1) mp=1;
                         if(!mp) mp=0;
+                        let up=""
+                        if(magic_item.up) up=`#+${magic_item.up}`
                         //妖精魔法でチェックのついていない場合の処理
                         if(i==3&&!magic_item.line){
                             if(!document.getElementById(magic_item.attribute).checked)
@@ -352,7 +371,7 @@ function yomikomi(img){
                         }
                         //fixedに値があれば、魔力+固定値のチャットパレットを作る
                         if(magic_item.fixed!=undefined){
-                            writeString+=`C({${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+${magic_item.fixed})　【${magic_item.name}】 :MP-${mp}\n`;
+                            writeString+=`C({${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+${magic_item.fixed})${up}　【${magic_item.name}】 :MP-${mp}\n`;
                             continue;
                         }
                         //チャットパレットに記述
@@ -363,12 +382,12 @@ function yomikomi(img){
                             }
                             let critical="@"+magic_item.c;
                             if(!magic_item.c) critical="";
-                            writeString+=`${magic_item.iryoku}+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}${critical}　【${magic_item.name}】 :MP-${mp}\n`;
+                            if(magic_item.onlyk) writeString+=`${magic_item.iryoku}${critical}　【${magic_item.name}】 :MP-${mp}\n`;
+                            else writeString+=`${magic_item.iryoku}+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}${critical}${up}　【${magic_item.name}】 :MP-${mp}\n`;
                         }
                     }
                 }
                 writeString=writeString.replace(/k50\+.*?【アースクェイク】/,"C(50+{魔法威力})　【アースクェイク】");
-                writeString=writeString.replace(/k(\d+)\+.*?(【ナチュラルパワー2?】)/g,"k$1@13　$2");
                 writeString=writeString.replace(/:MP-0/g,"");
 
                 //チャットパレット(ウィザード)
