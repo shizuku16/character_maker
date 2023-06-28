@@ -413,6 +413,15 @@ function yomikomi(img){
                         let mp=magic_item.mp;
                         if(jsondata.ST_name.includes(`MP軽減/${magicName_japanese[i]}`)) mp--;
                         if(Number(jsondata.V_GLv12)>=9) mp--;
+                        for(let tmp=0;tmp<jsondata.arms_name.length;tmp++){
+                            if(jsondata.arms_name[tmp].match("ブラックロッド")&&jsondata.arms_is_equip[tmp]=="1"){
+                                mp--;
+                                break;
+                            }
+                        }
+                        jsondata.arms_name.map((e,index)=>{
+                            
+                        })
                         if(mp<1) mp=1;
                         if(!mp) mp=0;
                         let up=""
