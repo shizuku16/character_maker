@@ -6,6 +6,7 @@ function previewImage(obj){
     fileReader.readAsDataURL(obj.files[0]);
 }
 
+//URL入力時の処理
 async function nameget() {
 	const url=document.getElementById("url").value
     $.ajax({
@@ -24,6 +25,10 @@ async function nameget() {
             if(Number(jsondata.V_GLv8)>0) document.getElementById("fairy").hidden=false;
             else document.getElementById("fairy").hidden=true;
 
+            //騎獣がいたら作成するかのチャックボックスを表示
+            if(jsondata.horse_name!="") document.getElementById("kizyudiv").hidden=false;
+            else document.getElementById("kizyudiv").hidden=true;
+
             //武器がないなら命中バフをなくす。そうでないなら攻撃バフを２にする。
             if(jsondata.arms_name.length==1&&jsondata.arms_name[0]=="") {
                 document.getElementById("hit").checked=false;
@@ -37,7 +42,11 @@ async function nameget() {
             }
             
             let magic_tf=0;
-            const magic_numlist=[5,6,7,8,9,17,24,21];
+            const magic_numlist=[5,6,7,8,9,17,24];
+
+            if(Number(jsondata.MLv21)>0) document.getElementById("herodev").hidden=false;
+            else document.getElementById("herodev").hidden=true;
+            if(document.getElementById("hero").checked) magic_numlist.push(21);
             for(let i=0;i<magic_numlist.length;i++){
                 let magic="MLv"+magic_numlist[i];
                 let lv=Number(jsondata[magic]);
@@ -93,7 +102,11 @@ function yomikomi(img){
             const hp=jsondata.HP;
             const mp=jsondata.MP;
             const bougo=jsondata.bougo;
-            const ginou_list=["ファイター","グラップラー","フェンサー","シューター","ソーサラー","コンジャラー",`プリースト/${jsondata.priest_sinkou}`,"フェアリーテイマー","マギテック","スカウト","レンジャー","セージ","エンハンサー","バード","アルケミスト","ライダー","デーモンルーラー","ウォーリーダー","ミスティック","フィジカルマスターx","ヒーロー","アーティザン","アリストクラシー","ドルイド","ジオマンサー","バトルダンサー"];
+            const ginou_list=["ファイター","グラップラー","フェンサー","シューター","ソーサラー","コンジャラー",`プリースト/${jsondata.priest_sinkou}`,"フェアリーテイマー","マギテック","スカウト","レンジャー","セージ","エンハンサー","バード","アルケミスト","ライダー","デーモンルーラー","ウォーリーダー","ミスティック","フィジカルマスター","グリモワール","アーティザン","アリストクラシー","ドルイド","ジオマンサー","バトルダンサー"];
+            let hero
+            if(document.getElementById("hero").checked&&Number(jsondata.V_GLv21)>0) hero=true;
+            else hero=false;
+            if(hero) ginou_list[20]="ヒーロー";
             let writeString=`<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<character location.name=\"table\" location.x=\"0\" location.y=\"0\" posZ=\"0\" rotate=\"0\" roll=\"0\">\n  <data name=\"character\">\n    ${img}\n    <data name=\"common\">\n      <data name=\"name\">${jsondata.pc_name}`;
             writeString+=`</data>\n      <data name="size">1</data>\n      <data name="URL">${url}</data>\n    </data>\n    <data name="detail">\n      <data name="リソース">\n        <data type="numberResource" currentValue="${hp}" name="HP">${hp}</data>\n        <data type="numberResource" currentValue="${mp}" name="MP">${mp}</data>\n        <data type="numberResource" currentValue="${bougo}" name="防護点">${bougo}</data>\n`;
             writeString+=`        <data type="numberResource" currentValue="0" name="1ゾロ">10</data>\n`
@@ -155,7 +168,7 @@ function yomikomi(img){
 
             writeString+=`\n\n//-----回避\n`;
             if(jsondata.kaihi_ginou_name) writeString+=`2d+{${jsondata.kaihi_ginou_name}}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
-            else if(Number(jsondata.V_GLv21)>0) writeString+=`2d+{ヒーロー}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
+            else if(hero) writeString+=`2d+{ヒーロー}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
             else writeString+=`2d+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
 
 
@@ -167,27 +180,37 @@ function yomikomi(img){
                     let ginou=ginou_list[Number(jsondata.V_arms_hit_ginou[i])-1];
                     let iryoku="k"+jsondata.arms_iryoku[i];
                     let koteiti=`${jsondata.arms_damage_mod[i]||0}`;
+                    let ST_damage=Number(jsondata.arms_damage||0)-Number(jsondata.arms_damage_mod||0)
                     let critical=Number(jsondata.arms_critical[i])||10;
                     let hit=`{器用度}/6`;
                     let temporary="";
+                    let hero_ST_damage=0;
                     if(jsondata.arms_is_senyou[i]==1) hit=`({器用度}+2)/6`;
                     hit+=`+${jsondata.arms_hit_mod[i]||0}+${jsondata.arms_hit_tokugi||0}`;
                     if(!ginou) {
-                        if(Number(jsondata.V_GLv21)>0) ginou="ヒーロー";
+                        if(hero){
+                            ginou="ヒーロー";
+                            if(jsondata.V_ST_id.includes("135")) hero_ST_damage++;
+                            if(jsondata.V_ST_id.includes("136")) hero_ST_damage+=2;
+                            if(jsondata.V_ST_id.includes("137")) hero_ST_damage+=3;
+
+                            if(ST_damage<=hero_ST_damage) ST_damage=0;
+                            else hero_ST_damage=0;
+                        }
                         else continue;
                     }
                     if(document.getElementById("buki").checked){
-                        temporary+=`\n//-----${buki}`;
+                        temporary+=`\n\n//-----${buki}`;
                         temporary+=`\n2d+{${ginou}}+${hit}+{命中}+{行動判定}+{行為判定} 【命中力判定】${buki}`;
-                        temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical} 【威力】${buki}`;
+                        temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical} 【威力】${buki}`;
                         if(document.getElementById("kurirei").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
                         if(document.getElementById("demeup").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
                         if(document.getElementById("kurirei").checked&&document.getElementById("demeup").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
                         if(document.getElementById("demefix").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+{攻撃}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
+                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
                     }
                     let attackstring="";
                     for(let i=0;i<document.getElementById("attack").value;i++) attackstring+=`+{攻撃${i+1}}`;
@@ -199,9 +222,9 @@ function yomikomi(img){
             }
 
             //チャットパレット(魔法)
-            const magic_numlist=[5,6,7,8,9,17,24,21];
-            const magicName_list=["真語魔法","操霊魔法","神聖魔法","妖精魔法","魔動機術","召異魔法","森羅魔法","英雄魔法"];
-            const magicName_japanese=["ソーサラー","コンジャラー","プリースト","フェアリーテイマー","マギテック","デーモンルーラー","ドルイド","ヒーロー"];
+            const magic_numlist=[5,6,7,8,9,17,24];
+            const magicName_list=["真語魔法","操霊魔法","神聖魔法","妖精魔法","魔動機術","召異魔法","森羅魔法"];
+            const magicName_japanese=["ソーサラー","コンジャラー","プリースト","フェアリーテイマー","マギテック","デーモンルーラー","ドルイド"];
             const magic_list={
                 5:[
                     {level:1,iryoku:"k10",name:"エネルギー・ボルト",c:10,mp:5},
@@ -280,6 +303,12 @@ function yomikomi(img){
                     {level:8,fixed:12,name:"エクステンドヒーリング",attribute:"light",mp:9},
                     {level:10,fixed:6,name:"リッチヒール",attribute:"light",mp:8},
                     {level:13,fixed:6,name:"バーチャルタフネス2",attribute:"light",mp:9},
+                    {level:1,line:true},
+                    {level:1,iryoku:20,name:"カオスショット",c:10,attribute:"chaos",mp:6},
+                    {level:2,iryoku:20,name:"カオスブラスト",c:10,attribute:"chaos",mp:8},
+                    {level:3,iryoku:30,name:"カオスボム",c:10,attribute:"chaos",mp:11},
+                    {level:4,iryoku:50,name:"カオススマッシュ",c:10,attribute:"chaos",mp:18},
+                    {level:5,iryoku:20,name:"カオスエクスプロージョン",c:10,attribute:"chaos",mp:26},
                 ],
                 9:[
                     {level:5,iryoku:"k30",name:"グレネード",c:10,mp:6},
@@ -318,19 +347,6 @@ function yomikomi(img){
                     {level:2,iryoku:"k10",name:"ナチュラルパワー",c:13,onlyk:true},
                     {level:12,iryoku:"k30",name:"ナチュラルパワー2",c:13,onlyk:true},
                 ],
-                21:[
-                    {level:1,iryoku:"k10",name:"ヒーローアライブ",mp:3,c:13},
-                    {level:2,iryoku:"k10",name:"ミラージュソード(追撃)",c:13,onlyk:true},
-                    {level:3,iryoku:"k10",name:"リンクサンダー",mp:7,c:10},
-                    {level:3,iryoku:"k10",name:"リンクサンダー(追撃)",onlyk:true},
-                    {level:4,iryoku:"k20",name:"パワーブレイク",mp:4,c:10},
-                    {level:5,iryoku:"k20",name:"スピードブレイク",mp:4,c:10},
-                    {level:6,iryoku:"k20",name:"ガードブレイク",mp:7,c:10},
-                    {level:10,iryoku:"k10",name:"ガードラッシュ",mp:16,c:13},
-                    {level:11,iryoku:"k10",name:"リンクスマッシュ(追撃)",c:10,up:2},
-                    {level:11,iryoku:"k40",name:"フルブレイク",mp:16,c:10},
-                    {level:10,iryoku:"k100",name:"レジメントレイブ",mp:32,c:8},
-                ],
                 wizard:[
                     {level:4,iryoku:"k20",name:"トキシック・ブリーズ",c:10,mp:7},
                     {level:7,iryoku:"k10",name:"ドロー・アウト",c:10,mp:7},
@@ -343,6 +359,25 @@ function yomikomi(img){
                     {level:15,iryoku:"k20",name:"オーバーブロウ",c:10,mp:25},
                 ],
             };
+            //ヒーロー魔法の処理
+            if(hero){
+                magic_numlist.push(21);
+                magicName_list.push("英雄魔法");
+                magicName_japanese.push("ヒーロー");
+                magic_list[21]=[
+                    {level:1,iryoku:"k10",name:"ヒーローアライブ",mp:3,c:13},
+                    {level:2,iryoku:"k10",name:"ミラージュソード(追撃)",c:13,onlyk:true},
+                    {level:3,iryoku:"k10",name:"リンクサンダー",mp:7,c:10},
+                    {level:3,iryoku:"k10",name:"リンクサンダー(追撃)",onlyk:true},
+                    {level:4,iryoku:"k20",name:"パワーブレイク",mp:4,c:10},
+                    {level:5,iryoku:"k20",name:"スピードブレイク",mp:4,c:10},
+                    {level:6,iryoku:"k20",name:"ガードブレイク",mp:7,c:10},
+                    {level:10,iryoku:"k10",name:"ガードラッシュ",mp:16,c:13},
+                    {level:11,iryoku:"k10",name:"リンクスマッシュ(追撃)",c:10,up:2},
+                    {level:11,iryoku:"k40",name:"フルブレイク",mp:16,c:10},
+                    {level:10,iryoku:"k100",name:"レジメントレイブ",mp:32,c:8},
+                ];
+            }
 
             const magictype=document.getElementById("mahou");
             if(magictype.checked){
@@ -352,6 +387,24 @@ function yomikomi(img){
                     let ginou=ginou_list[magic_numlist[i]-1];
                     //魔法技能を習得しているかの確認
                     if(!lv) continue;
+                    //妖精魔法の使用可能レベルの計算
+                    let fairycount=0;
+                    if(document.getElementById("earth").checked) fairycount++;
+                    if(document.getElementById("water").checked) fairycount++;
+                    if(document.getElementById("fire").checked) fairycount++;
+                    if(document.getElementById("window").checked) fairycount++;
+                    if(document.getElementById("light").checked) fairycount++;
+                    if(document.getElementById("dark").checked) fairycount++;
+                    const fairy_3=[1,2,4,5,6,8,9,10,12,13,14,15,15,15,15];
+                    const fairy_6=[1,2,2,3,4,4,5,6,6,7,8,8,9,10,10];
+                    const fairy_chaos=[0,0,1,1,1,2,2,2,3,3,3,4,4,4,5];
+                    let chaosLv=0;
+                    if(fairycount==3) lv=fairy_3[lv-1];
+                    if(fairycount==6){
+                        chaosLv=fairy_chaos[lv-1];
+                        lv=fairy_6[lv-1];
+                    };
+
                     writeString+=`\n\n//-----${ginou}\n2d+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法行使}+{行動判定}+{行為判定} 【${magicName_list[i]}行使判定】\n`;
                     for(let j=0;j<magic_list[magic_numlist[i]].length;j++){
                         //魔法の詳細をmagic_itemに代入
@@ -364,6 +417,13 @@ function yomikomi(img){
                         if(!mp) mp=0;
                         let up=""
                         if(magic_item.up) up=`#+${magic_item.up}`
+
+                        //カオス魔法
+                        if(magic_item.attribute=="chaos"&&magic_item.level<=chaosLv){
+                            let critical="@"+magic_item.c;
+                            writeString+=`${magic_item.iryoku}+{${ginou}}+({知力}/6)+${jsondata.MM_Tokugi}+${jsondata.arms_maryoku_sum}+{魔法威力}${critical}${up}　【${magic_item.name}】 :MP-${mp}\n`;
+                            continue;
+                        }
                         //妖精魔法でチェックのついていない場合の処理
                         if(i==3&&!magic_item.line){
                             if(!document.getElementById(magic_item.attribute).checked)
@@ -443,8 +503,16 @@ function yomikomi(img){
             //チャットパレット(戦闘特技)
             if(document.getElementById("tokugi").checked){
                 writeString+="\n//-----戦闘特技\n"
+                if(hero){
+                    writeString+=""
+                    if(Number(jsondata.V_GLv21)>=7) writeString+="《ヒーローアクション》近接攻撃と英雄魔法行使を同時に行う\n";
+                    if(Number(jsondata.V_GLv21)>=13) writeString+="《ヒーローマスター》3回の宣言特技の宣言が可能になる\n";
+                }
                 for(let i=0;i<jsondata.ST_name.length;i++){
-                    writeString+=`《${jsondata.ST_name[i]}》${jsondata.ST_kouka[i]}\n`
+                    if(hero&&jsondata.V_ST_id[i]=="135") "《装備習熟A/ヒーロー》Aランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+1\n";
+                    else if(hero&&jsondata.V_ST_id[i]=="136") "《装備習熟S/ヒーロー》Sランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+2\n";
+                    else if(hero&&jsondata.V_ST_id[i]=="137") "《装備習熟SS/ヒーロー》SSランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+3\n";
+                    else writeString+=`《${jsondata.ST_name[i]}》${jsondata.ST_kouka[i]}\n`
                 }
             }
 
