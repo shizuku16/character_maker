@@ -12,15 +12,16 @@
     <link rel="stylesheet" href="./character_maker.css" type="text/css">
 </head>
 <body>
-    キャラシのURL：<input type="text" id="url" onchange="nameget()" style="width: 25em;"><h id="name"></h><br>
+    キャラシのURL：<input type="text" id="url" oninput="nameget()" style="width: 25em;"><h id="name"></h><br>
     キャラコマ画像：<input type="file" id="image" name="image" accept="image/png,image/jpeg,image/jpg" onchange="previewImage(this)"><br><br>
     
     <form class="form1">
         <div class="box1" id="recipe">
         <span class="box-title">設定</span>
-        <input type="checkbox" id="kizyu" checked><label for="kizyu">騎獣のキャラコマも同時に作成する</label><br>
+        <div id="kizyudiv" hidden><input type="checkbox" id="kizyu" checked><label for="kizyu">騎獣のキャラコマも同時に作成する</label><br></div>
         <input type="checkbox" id="tokugi" checked><label for="tokugi">戦闘特技のチャットパレットを作成する</label><br>
         <input type="checkbox" id="damage" checked><label for="damage">ダメージ計算のチャットパレットを作成する</label><br>
+        <dev id="herodev" hidden><input type="checkbox" id="hero" onchange="nameget()" checked><label for="hero">グリモワール技能をヒーロー技能として扱う</label><br></dev>
         <div id="rider" hidden>
             <input type="checkbox" id="riderseisin" checked><label for="riderseisin">「ライダー技能+{精神力}/6」をチャットパレットに追加</label><br>
         </div>
@@ -44,6 +45,7 @@
             <div id="mpcommand">
                 <input type="checkbox" name="mp" id="mp" checked><label for="mp">MP減少コマンドを付与(MP軽減等は反映)</label>
             </div>
+            
             <div id="fairy" hidden>
                 <br>妖精魔法の属性<br>　
                 <input type="checkbox" id="earth" checked><label for="earth">土 </label>
@@ -52,6 +54,7 @@
                 <input type="checkbox" id="window" checked><label for="window">風 </label>
                 <input type="checkbox" id="light" checked><label for="light">光 </label>
                 <input type="checkbox" id="dark" checked><label for="dark">闇 </label><br>
+                <div hidden><input type="checkbox" id="chaos"><label for="chaos">カオス </label><br></div>
             </div>
         </details>
         <br>
