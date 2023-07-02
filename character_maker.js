@@ -180,7 +180,7 @@ function yomikomi(img){
                     let ginou=ginou_list[Number(jsondata.V_arms_hit_ginou[i])-1];
                     let iryoku="k"+jsondata.arms_iryoku[i];
                     let koteiti=`${jsondata.arms_damage_mod[i]||0}`;
-                    let ST_damage=Number(jsondata.arms_damage||0)-Number(jsondata.arms_damage_mod||0)
+                    let ST_damage=Number(jsondata.arms_damage[i]||0)-Number(jsondata.arms_damage_mod[i]||0)-Number(jsondata["G"+jsondata.V_arms_hit_ginou[i]+"_damage"]||0);
                     let critical=Number(jsondata.arms_critical[i])||10;
                     let hit=`{器用度}/6`;
                     let temporary="";
