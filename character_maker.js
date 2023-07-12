@@ -419,6 +419,7 @@ function yomikomi(img){
                                 break;
                             }
                         }
+                        if(ginou=="ヒーロー"&&jsondata.V_ST_id.includes("134")) mp--;
                         jsondata.arms_name.map((e,index)=>{
                             
                         })
@@ -518,9 +519,49 @@ function yomikomi(img){
                     if(Number(jsondata.V_GLv21)>=13) writeString+="《ヒーローマスター》3回の宣言特技の宣言が可能になる\n";
                 }
                 for(let i=0;i<jsondata.ST_name.length;i++){
-                    if(hero&&jsondata.V_ST_id[i]=="135") "《装備習熟A/ヒーロー》Aランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+1\n";
-                    else if(hero&&jsondata.V_ST_id[i]=="136") "《装備習熟S/ヒーロー》Sランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+2\n";
-                    else if(hero&&jsondata.V_ST_id[i]=="137") "《装備習熟SS/ヒーロー》SSランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+3\n";
+                    if(hero){
+                        switch(jsondata.V_ST_id[i]){
+                            case "134": 
+                                writeString+="《MP軽減/ヒーロー》英雄魔法のMP消費-１\n";
+                                break;
+                            case "135": 
+                                writeString+="《装備習熟A/ヒーロー》Aランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+1\n";
+                                break;
+                            case "136": 
+                                writeString+="《装備習熟S/ヒーロー》Sランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+2\n";
+                                break;
+                            case "137": 
+                                writeString+="《装備習熟SS/ヒーロー》SSランクの〈ソード〉・〈盾〉カテゴリ装備可能、ダメージ+3\n";
+                                break;
+                            case "5":
+                                if(hero_ST(i,"5",9,jsondata)){
+                                    writeString+="《回避行動》回避力+2\n";
+                                    break;
+                                }
+                            case "141":
+                                if(hero_ST(i,"141",13,jsondata)){
+                                    writeString+="《変幻自在》1ラウンドに3回まで戦闘特技を宣言できる　他の特技宣言増加技能と重複しない\n";
+                                    break;
+                                }
+                            case "86":
+                                if(hero_ST(i,"86",9,jsondata)){
+                                    writeString+="《全力攻撃》次の1回の近接攻撃ダメージ+12：回避-2\n";
+                                    break;
+                                }
+                            case "90":
+                                if(hero_ST(i,"90",7,jsondata)){
+                                    writeString+="《挑発攻撃》挑発したPC以外を対象とした行動に-2ペナルティ\n";
+                                    break;
+                                }
+                            case "96":
+                                if(hero_ST(i,"96",11,jsondata)){
+                                    writeString+="《必殺攻撃》次の1回の近接攻撃のダメージの出目+1、C後も継続＋クリ無効やC値増加無視\n";
+                                    break;
+                                }
+                            default: 
+                                writeString+=`《${jsondata.ST_name[i]}》${jsondata.ST_kouka[i]}\n`;
+                        }
+                    }
                     else writeString+=`《${jsondata.ST_name[i]}》${jsondata.ST_kouka[i]}\n`
                 }
             }
@@ -686,5 +727,10 @@ function download(writeString,writeString2,jsondata){
             //作成したリンクをクリックしてダウンロードを実行する
             download.click();
             //createObjectURLで作成したオブジェクトURLを開放する
-            (window.URL || window.webkitURL).revokeObjectURL(url);})
+            (window.URL || window.webkitURL).revokeObjectURL(url);
+        })
 }      
+
+function hero_ST(i,num,lv,jsondata){
+    return jsondata.V_ST_id.slice(0,-1).includes(num)&&Number(jsondata.V_GLv21)>=lv&&jsondata.V_ST_id[i]==num;
+}
