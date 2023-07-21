@@ -399,8 +399,8 @@ function yomikomi(img){
                     const fairy_6=[1,2,2,3,4,4,5,6,6,7,8,8,9,10,10];
                     const fairy_chaos=[0,0,1,1,1,2,2,2,3,3,3,4,4,4,5];
                     let chaosLv=0;
-                    if(fairycount==3) lv=fairy_3[lv-1];
-                    if(fairycount==6){
+                    if(fairycount==3&&i==3) lv=fairy_3[lv-1];
+                    if(fairycount==6&i==3){
                         chaosLv=fairy_chaos[lv-1];
                         lv=fairy_6[lv-1];
                     };
