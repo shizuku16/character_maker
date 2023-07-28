@@ -113,7 +113,8 @@ function yomikomi(img){
             if(Number(jsondata.V_GLv14)>0) writeString+=`        <data name="楽素">\n          <data name="高揚" type="numberResource" currentValue="0">10</data>\n          <data name="鎮静" type="numberResource" currentValue="0">10</data>\n          <data name="魅惑" type="numberResource" currentValue="0">10</data>\n        </data>\n`;
             if(Number(jsondata.V_GLv25)>0) writeString+=`        <data name="命脈点">\n          <data name="天" type="numberResource" currentValue="0">4</data>\n          <data name="地" type="numberResource" currentValue="0">4</data>\n          <data name="人" type="numberResource" currentValue="0">4</data>\n        </data>\n`;
             if(Number(jsondata.V_GLv18)>0) writeString+=`        <data type="numberResource" currentValue="0" name="陣気">10</data>\n`;
-            writeString+=`      </data>\n      <data name="能力値">\n        <data name="器用度">${jsondata.NP1}</data>\n        <data name="敏捷度">${jsondata.NP2}</data>\n        <data name="筋力">${jsondata.NP3}</data>\n        <data name="生命力">${jsondata.NP4}</data>\n        <data name="知力">${jsondata.NP5}</data>\n        <data name="精神力">${jsondata.NP6}</data>\n      </data>\n`;
+            if(document.getElementById("nouryokuti").checked) writeString+=`      </data>\n      <data name="能力値">\n        <data name="器用度">(${jsondata.NP1}+{器用B})</data>\n        <data name="敏捷度">(${jsondata.NP2}+{敏捷B})</data>\n        <data name="筋力">(${jsondata.NP3}+{筋力B})</data>\n        <data name="生命力">(${jsondata.NP4}+{生命力B})</data>\n        <data name="知力">(${jsondata.NP5}+{知力B})</data>\n        <data name="精神力">(${jsondata.NP6}+{精神力B})</data>\n      </data>\n`;
+            else writeString+=`      </data>\n      <data name="能力値">\n        <data name="器用度">${jsondata.NP1}</data>\n        <data name="敏捷度">${jsondata.NP2}</data>\n        <data name="筋力">${jsondata.NP3}</data>\n        <data name="生命力">${jsondata.NP4}</data>\n        <data name="知力">${jsondata.NP5}</data>\n        <data name="精神力">${jsondata.NP6}</data>\n      </data>\n`;
             writeString+=`      <data name="技能">\n        <data name="冒険者レベル">${jsondata.lv}</data>\n`;
             for(let i=1;i<=26;i++){
                 let num="V_GLv"+i
@@ -121,18 +122,22 @@ function yomikomi(img){
                 writeString+=`        <data name="${ginou_list[i-1]}">${jsondata[num]}</data>\n`
             }
             writeString+=`\n      </data>\n      <data name="バフ・デバフ">\n`;
-            const id=["hit","avoid","attack","kurirei","demeup","demefix","magic_kousi","magic_iryoku","seimei","seisin"];
-            const japanese=["命中","回避","攻撃","クリレイ","出目上昇","出目固定","魔法行使","魔法威力","生命抵抗","精神抵抗"];
+            
+            const id=["hit","avoid","attack","kurirei","demeup","demefix","magic_kousi","magic_iryoku","seimei_resist","seisin_resist","kiyou","binsyou","kinryoku","seimei","tiryoku","seimei"];
+            const japanese=["命中","回避","攻撃","クリレイ","出目上昇","出目固定","魔法行使","魔法威力","生命抵抗","精神抵抗","器用B","敏捷B","筋力B","生命力B","知力B","精神力B"];
             for(let i=0;i<id.length;i++){
                 if(3<=i&&i<=5&&!document.getElementById("buki").checked) continue;
+                if(10<=i&&i<=15&&!document.getElementById("nouryokuti").checked) continue;
                 if(i==2){
                     for(let j=0;j<document.getElementById(id[i]).value;j++){
                         writeString+=`        <data type="numberResource" currentValue="0" name="攻撃${j+1}">5</data>\n`;
                     }
                     continue;
                 }
-                if(document.getElementById(id[i]).checked)
-                    writeString+=`        <data type="numberResource" currentValue="0" name="${japanese[i]}">5</data>\n`;
+                if(document.getElementById(id[i]).checked){
+                    let max=5;
+                    if(10<=i&&i<=15) max=6; 
+                    writeString+=`        <data type="numberResource" currentValue="0" name="${japanese[i]}">${max}</data>\n`;}
             }
             if(document.getElementById("damage").checked) writeString+=`\n        <data type="numberResource" currentValue="0" name="ダメージ軽減">5</data>`;
             writeString+=`\n        <data type="numberResource" currentValue="0" name="行為判定">5</data>`;
@@ -387,6 +392,7 @@ function yomikomi(img){
                     let ginou=ginou_list[magic_numlist[i]-1];
                     //魔法技能を習得しているかの確認
                     if(!lv) continue;
+                    console.log(lv)
                     //妖精魔法の使用可能レベルの計算
                     let fairycount=0;
                     if(document.getElementById("earth").checked) fairycount++;
@@ -400,7 +406,7 @@ function yomikomi(img){
                     const fairy_chaos=[0,0,1,1,1,2,2,2,3,3,3,4,4,4,5];
                     let chaosLv=0;
                     if(fairycount==3&&i==3) lv=fairy_3[lv-1];
-                    if(fairycount==6&i==3){
+                    if(fairycount==6&&i==3){
                         chaosLv=fairy_chaos[lv-1];
                         lv=fairy_6[lv-1];
                     };
