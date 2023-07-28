@@ -149,7 +149,7 @@ function yomikomi(img){
             //以下チャットパレット
             writeString+=`      </data>\n    </data>\n  </data>\n  <chat-palette dicebot="SwordWorld2.5">1d\n1d&gt;=4\n2d 【平目】\n\n`;
             if(document.getElementById("damage").checked) writeString+=`//-----ダメージ計算\nC({HP}-()+{防護点}+{ダメージ軽減}) 　【残HP（物理ダメージ）】\nC({HP}-()+{ダメージ軽減})　【残HP（魔法ダメージ）】\nC({MP}-())　【MP消費】`;
-            writeString+=`\n\n//-----冒険者判定\n2d+{冒険者レベル}+({器用}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({知力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({敏捷度}/6)+{行動判定}+{行為判定} 【跳躍判定】【水泳判定】\n2d+{冒険者レベル}+({筋力}/6)+{行動判定}+{行為判定} 【登攀判定】【腕力判定】\n2d+{冒険者レベル}+({生命力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({精神力}/6)+{行動判定}+{行為判定} 【真偽判定】\n\n//-----抵抗力\n`;
+            writeString+=`\n\n//-----冒険者判定\n2d+{冒険者レベル}+({器用度}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({知力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({敏捷度}/6)+{行動判定}+{行為判定} 【跳躍判定】【水泳判定】\n2d+{冒険者レベル}+({筋力}/6)+{行動判定}+{行為判定} 【登攀判定】【腕力判定】\n2d+{冒険者レベル}+({生命力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({精神力}/6)+{行動判定}+{行為判定} 【真偽判定】\n\n//-----抵抗力\n`;
             let mental_calc=jsondata.mental_resist-jsondata.lv-jsondata.NB6-(jsondata.mental_resist_mod||0);
             let life_calc=jsondata.life_resist-jsondata.lv-jsondata.NB4-(jsondata.life_resist_mod||0);
             writeString+=`2d+{冒険者レベル}+({生命力}/6)+{生命抵抗}+${jsondata.life_resist_mod||0}+${life_calc}+{行為判定} 【生命抵抗力判定】\n2d+{冒険者レベル}+({精神力}/6)+{精神抵抗}+${jsondata.mental_resist_mod||0}+${mental_calc}+{行為判定} 【精神抵抗力判定】\n`;
