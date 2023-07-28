@@ -34,8 +34,17 @@
             <label for="attack">攻撃 </label><input type="number" id="attack" style="width:2em;" min="0" value="0"><br>
             <input type="checkbox" id="magic_kousi" checked><label for="magic_kousi">魔法行使 </label>
             <input type="checkbox" id="magic_iryoku" checked><label for="magic_iryoku">魔法威力 </label><br>
-            <input type="checkbox" id="seimei" checked><label for="seimei">生命抵抗 </label>
-            <input type="checkbox" id="seisin" checked><label for="seisin">精神抵抗 </label>
+            <input type="checkbox" id="seimei_resist" checked><label for="seimei_resist">生命抵抗 </label>
+            <input type="checkbox" id="seisin_resist" checked><label for="seisin_resist">精神抵抗 </label><br>
+            <input type="checkbox" id="nouryokuti" checked onchange="nouryokuti(this)"><label for="nouryokuti">能力値 </label>
+            <div hidden>
+                <input type="checkbox" id="kiyou" checked><label for="nouryokuti">能力値 </label>
+                <input type="checkbox" id="binsyou" checked><label for="nouryokuti">能力値 </label>
+                <input type="checkbox" id="kinryoku" checked><label for="nouryokuti">能力値 </label>
+                <input type="checkbox" id="seimei" checked><label for="nouryokuti">能力値 </label>
+                <input type="checkbox" id="tiryoku" checked><label for="nouryokuti">能力値 </label>
+                <input type="checkbox" id="seisin" checked><label for="nouryokuti">能力値 </label>
+            </div>
         </details>
         <br>
         <details open>
