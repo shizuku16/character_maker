@@ -185,7 +185,9 @@ function yomikomi(img){
                     let ginou=ginou_list[Number(jsondata.V_arms_hit_ginou[i])-1];
                     let iryoku="k"+jsondata.arms_iryoku[i];
                     let koteiti=`${jsondata.arms_damage_mod[i]||0}`;
-                    let ST_damage=Number(jsondata.arms_damage[i]||0)-Number(jsondata.arms_damage_mod[i]||0)-Number(jsondata["G"+jsondata.V_arms_hit_ginou[i]+"_damage"]||0);
+                    let ST_damage=0;
+                    if(jsondata.ST_name.includes(`武器習熟A/${jsondata.arms_cate[i]}`)) ST_damage++;
+                    if(jsondata.ST_name.includes(`武器習熟S/${jsondata.arms_cate[i]}`)) ST_damage+=2;
                     let critical=Number(jsondata.arms_critical[i])||10;
                     let hit=`{器用度}/6`;
                     let temporary="";
