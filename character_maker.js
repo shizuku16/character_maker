@@ -241,7 +241,7 @@ function yomikomi(img){
                     {level:6,iryoku:"k20",name:"ファイアボール",c:10,mp:8},
                     {level:7,iryoku:"k10",name:"スティール・マインド",c:10,mp:2},
                     {level:8,iryoku:"k40",name:"エネルギー・ジャベリン",c:10,mp:9},
-                    {level:9,iryoku:"k0",name:"ブレードネット",c:13,mp:10},
+                    {level:9,iryoku:"k0",name:"ブレードネット",c:13,mp:0},
                     {level:10,iryoku:"k30",name:"ブリザード",c:10,mp:10},
                     {level:11,iryoku:"k50",name:"サンダー・ボルト",c:10,mp:13},
                     {level:12,iryoku:"k40",name:"シャイニング・スポット",c:9,mp:16},
