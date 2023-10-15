@@ -160,10 +160,10 @@ function yomikomi(img){
             //以下チャットパレット
             writeString+=`      </data>\n    </data>\n  </data>\n  <chat-palette dicebot="SwordWorld2.5">1d\n1d&gt;=4\n2d 【平目】\n\n`;
             if(document.getElementById("damage").checked) writeString+=`//-----ダメージ計算\nC({HP}-()+{防護点}+{ダメージ軽減}) 　【残HP（物理ダメージ）】\nC({HP}-()+{ダメージ軽減})　【残HP（魔法ダメージ）】\nC({MP}-())　【MP消費】`;
-            writeString+=`\n\n//-----冒険者判定\n2d+{冒険者レベル}+({器用度}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({知力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({敏捷度}/6)+{行動判定}+{行為判定} 【跳躍判定】【水泳判定】\n2d+{冒険者レベル}+({筋力}/6)+{行動判定}+{行為判定} 【登攀判定】【腕力判定】\n2d+{冒険者レベル}+({生命力}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({精神力}/6)+{行動判定}+{行為判定} \n\n//-----抵抗力\n`;
+            writeString+=`:HP+{防護点}+{ダメージ軽減}-　【物理ダメージ】\n:HP+{ダメージ軽減}-　【魔法ダメージ】`;
+            writeString+=`\n\n//-----冒険者判定\n2d+{冒険者レベル}+({器用度}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({知力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({敏捷度}/6)+{行動判定}+{行為判定} 【跳躍判定】【水泳判定】\n2d+{冒険者レベル}+({筋力}/6)+{行動判定}+{行為判定} 【登攀判定】【腕力判定】\n2d+{冒険者レベル}+({生命力}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({精神力}/6)+{行動判定}+{行為判定} \n\n`;
             let mental_calc=jsondata.mental_resist-jsondata.lv-jsondata.NB6-(jsondata.mental_resist_mod||0);
             let life_calc=jsondata.life_resist-jsondata.lv-jsondata.NB4-(jsondata.life_resist_mod||0);
-            writeString+=`2d+{冒険者レベル}+({生命力}/6)+{生命抵抗}+${jsondata.life_resist_mod||0}+${life_calc}+{行為判定} 【生命抵抗力判定】\n2d+{冒険者レベル}+({精神力}/6)+{精神抵抗}+${jsondata.mental_resist_mod||0}+${mental_calc}+{行為判定} 【精神抵抗力判定】\n`;
 
             //チャットパレット(技能依存の判定)
             if(Number(jsondata.V_GLv10)>0) writeString+=`\n//-----スカウト\n2d+{スカウト}+({器用度}/6)+{行動判定}+{行為判定} 【スカウト技巧判定】スリ/変装/隠蔽/解除/罠設置\n2d+{スカウト}+({敏捷度}/6)+{行動判定}+{行為判定} 【スカウト運動判定】先制/受け身/隠密/軽業/登攀/尾行\n2d+{スカウト}+({知力}/6)+{行動判定}+{行為判定} 【スカウト観察判定】宝物鑑定/足跡追跡/異常感知/聞き耳/危険感知/探索/天候予測/罠回避/地図作製\n`;
@@ -181,6 +181,7 @@ function yomikomi(img){
             if(Number(jsondata.V_GLv18)>0&&jsondata.Sensei_INT_Bonus=="1") writeString+=`2d+{ウォーリーダー}+({知力}/6)+${jsondata.sensei_mod||1}+{行動判定}+{行為判定} 【先制判定】\n`;
             if(Number(jsondata.V_GLv12)>0) writeString+=`2d+{セージ}+({知力}/6)+${jsondata.mamono_chishiki_mod||0}+{行動判定}+{行為判定} 【魔物知識判定】\n`;
             if(Number(jsondata.V_GLv16)>0) writeString+=`2d+{ライダー}+({知力}/6)+${jsondata.mamono_chishiki_mod||0}+{行動判定}+{行為判定} 【魔物知識判定*】 (*弱点不可)`;
+            writeString+=`//-----抵抗力\n2d+{冒険者レベル}+({生命力}/6)+{生命抵抗}+${jsondata.life_resist_mod||0}+${life_calc}+{行為判定} 【生命抵抗力判定】\n2d+{冒険者レベル}+({精神力}/6)+{精神抵抗}+${jsondata.mental_resist_mod||0}+${mental_calc}+{行為判定} 【精神抵抗力判定】\n`;
 
             writeString+=`\n\n//-----回避\n`;
             if(jsondata.kaihi_ginou_name) writeString+=`2d+{${jsondata.kaihi_ginou_name}}+({敏捷度}/6)+{回避}+${jsondata.armor_kaihi||0}+${jsondata.shield_kaihi||0}+${jsondata.shield2_kaihi||0}+${jsondata.bougu_kaihi_tokugi||0}+${jsondata.bougu_kaihi_mod||0}+{行動判定}+{行為判定} 【回避力判定】\n`;
