@@ -31,7 +31,19 @@
             <summary>バフ・デバフ</summary>
             <input type="checkbox" id="hit" checked><label for="hit">命中 </label>
             <input type="checkbox" id="avoid" checked><label for="avoid">回避 </label>
-            <label for="attack">攻撃 </label><input type="number" id="attack" style="width:2em;" min="0" value="0"><br>
+            <span>
+                <label class="switch__label">
+                    <input type="checkbox" id="attackSwitch" class="switch__input" onchange="change(this)"/>
+                    <span class="switch__content"></span>
+                    <span class="switch__circle"></span>
+                </label>
+                攻撃
+                <span id="auto">(自動命名) <input type="number" id="attack" style="width:2em;" min="0" value="0"><br></span>
+                <span id="design" hidden>(指定命名) <input type="text" id="designAttack" placeholder="攻撃1,攻撃2,攻撃3"><br></span>
+            </span>
+
+            
+            
             <input type="checkbox" id="magic_kousi" checked><label for="magic_kousi">魔法行使 </label>
             <input type="checkbox" id="magic_iryoku" checked><label for="magic_iryoku">魔法威力 </label><br>
             <input type="checkbox" id="seimei_resist" checked><label for="seimei_resist">生命抵抗 </label>
@@ -52,7 +64,7 @@
             <input type="radio" name="mahou" id="mahou" checked onchange="mahouchange()"><label for="mahou">使用可能な魔法のみ</label><br>
             <input type="radio" name="mahou" id="mahou2" onchange="mahouchange()"><label for="mahou2">威力0から100まで10ごとに全て作る</label><br>
             <div id="mpcommand">
-                <input type="checkbox" name="mp" id="mp" checked><label for="mp">MP減少コマンドを付与(MP軽減等は反映)</label>
+                <input type="checkbox" name="mp" id="mp" checked><label for="mp">MP操作コマンドを付与(MP軽減等は反映)</label>
             </div>
             
             <div id="fairy" hidden>
