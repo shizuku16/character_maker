@@ -74,6 +74,16 @@ function mahouchange(){
     else document.getElementById("mpcommand").hidden=true;
 }
 
+function change(btn){
+    if(btn.checked) {
+        document.getElementById("design").hidden=false;
+        document.getElementById("auto").hidden=true;
+    }else{
+        document.getElementById("design").hidden=true;
+        document.getElementById("auto").hidden=false;
+    }
+}
+
 async function load() {
     const imagefile=document.getElementById("image");
     if(imagefile.files[0]){
@@ -103,9 +113,10 @@ function yomikomi(img){
             const mp=jsondata.MP;
             const bougo=jsondata.bougo;
             const ginou_list=["ファイター","グラップラー","フェンサー","シューター","ソーサラー","コンジャラー",`プリースト/${jsondata.priest_sinkou}`,"フェアリーテイマー","マギテック","スカウト","レンジャー","セージ","エンハンサー","バード","アルケミスト","ライダー","デーモンルーラー","ウォーリーダー","ミスティック","フィジカルマスター","グリモワール","アーティザン","アリストクラシー","ドルイド","ジオマンサー","バトルダンサー"];
-            let hero
-            if(document.getElementById("hero").checked&&Number(jsondata.V_GLv21)>0) hero=true;
-            else hero=false;
+            const hero=document.getElementById("hero").checked&&Number(jsondata.V_GLv21)>0 ? true:false;
+            const auto=document.getElementById("attack");
+            const design=document.getElementById("designAttack");
+            if(document.getElementById("attackSwitch").checked) auto.value=design.value.split(/,|、/).length;
             if(hero) ginou_list[20]="ヒーロー";
             let writeString=`<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<character location.name=\"table\" location.x=\"0\" location.y=\"0\" posZ=\"0\" rotate=\"0\" roll=\"0\">\n  <data name=\"character\">\n    ${img}\n    <data name=\"common\">\n      <data name=\"name\">${jsondata.pc_name}`;
             writeString+=`</data>\n      <data name="size">1</data>\n      <data type="note" name="URL">${url}</data>\n    </data>\n    <data name="detail">\n      <data name="リソース">\n        <data type="numberResource" currentValue="${hp}" name="HP">${hp}</data>\n        <data type="numberResource" currentValue="${mp}" name="MP">${mp}</data>\n        <data type="numberResource" currentValue="${bougo}" name="防護点">${bougo}</data>\n`;
@@ -149,7 +160,7 @@ function yomikomi(img){
             //以下チャットパレット
             writeString+=`      </data>\n    </data>\n  </data>\n  <chat-palette dicebot="SwordWorld2.5">1d\n1d&gt;=4\n2d 【平目】\n\n`;
             if(document.getElementById("damage").checked) writeString+=`//-----ダメージ計算\nC({HP}-()+{防護点}+{ダメージ軽減}) 　【残HP（物理ダメージ）】\nC({HP}-()+{ダメージ軽減})　【残HP（魔法ダメージ）】\nC({MP}-())　【MP消費】`;
-            writeString+=`\n\n//-----冒険者判定\n2d+{冒険者レベル}+({器用度}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({知力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({敏捷度}/6)+{行動判定}+{行為判定} 【跳躍判定】【水泳判定】\n2d+{冒険者レベル}+({筋力}/6)+{行動判定}+{行為判定} 【登攀判定】【腕力判定】\n2d+{冒険者レベル}+({生命力}/6)+{行動判定}+{行為判定}  \n2d+{冒険者レベル}+({精神力}/6)+{行動判定}+{行為判定} \n\n//-----抵抗力\n`;
+            writeString+=`\n\n//-----冒険者判定\n2d+{冒険者レベル}+({器用度}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({知力}/6)+{行動判定}+{行為判定} 【真偽判定】\n2d+{冒険者レベル}+({敏捷度}/6)+{行動判定}+{行為判定} 【跳躍判定】【水泳判定】\n2d+{冒険者レベル}+({筋力}/6)+{行動判定}+{行為判定} 【登攀判定】【腕力判定】\n2d+{冒険者レベル}+({生命力}/6)+{行動判定}+{行為判定} \n2d+{冒険者レベル}+({精神力}/6)+{行動判定}+{行為判定} \n\n//-----抵抗力\n`;
             let mental_calc=jsondata.mental_resist-jsondata.lv-jsondata.NB6-(jsondata.mental_resist_mod||0);
             let life_calc=jsondata.life_resist-jsondata.lv-jsondata.NB4-(jsondata.life_resist_mod||0);
             writeString+=`2d+{冒険者レベル}+({生命力}/6)+{生命抵抗}+${jsondata.life_resist_mod||0}+${life_calc}+{行為判定} 【生命抵抗力判定】\n2d+{冒険者レベル}+({精神力}/6)+{精神抵抗}+${jsondata.mental_resist_mod||0}+${mental_calc}+{行為判定} 【精神抵抗力判定】\n`;
@@ -639,6 +650,15 @@ function yomikomi(img){
                 if(!document.getElementById(id[i]).checked){
                     let reg=new RegExp("\\+{"+japanese[i]+"}","g");
                     writeString=writeString.replace(reg,"");
+                }
+            }
+            //指定命名の場合に、置き換える処理
+            if(document.getElementById("attackSwitch").checked){
+                const list=design.value.split(/,|、/);
+                console.log(list)
+                for(let i=0;i<list.length;i++){
+                    let reg=new RegExp(`攻撃${i+1}`,"g");
+                    writeString=writeString.replace(reg,list[i]);
                 }
             }
             //MP消費をチャットパレットに入れない場合の処理

@@ -26,6 +26,10 @@ footer {
     width: fit-content;
     user-select: none;
 }
+img{
+    width: 500;
+    max-width: 100%;
+}
 
 a.makebtn {
 	text-align: center;
@@ -40,12 +44,6 @@ a.makebtn {
 	border-radius: 100vh;
 	transition: 0.5s;
 }
-
-img{
-    width: 500;
-    max-width: 100%;
-}
-
 a.makebtn:hover {
 	color: #27acd9;
 	background: #fff;
@@ -62,4 +60,79 @@ summary{
     flex-wrap: wrap;
     margin-bottom: 1em;
     gap: 30px 20px;
+}
+
+
+.switch__label {
+    width: 37px;
+    position: relative;
+    display: inline-block;
+    padding-top: 3px;
+}
+.switch__content {
+    display: block;
+    cursor: pointer;
+    position: relative;
+    border-radius: 7px;
+    height: 14px;
+    background-color: rgba(34,31,31,.26);
+    -webkit-transition: all .1s .4s;
+       -moz-transition: all .1s .4s;
+        -ms-transition: all .1s .4s;
+         -o-transition: all .1s .4s;
+            transition: all .1s .4s;
+    overflow: hidden;
+}
+.switch__content:after {
+    content: "";
+    display: block;
+    position: absolute;
+    
+    width: 0;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 7px;
+    -webkit-transition: all .5s;
+       -moz-transition: all .5s;
+        -ms-transition: all .5s;
+         -o-transition: all .5s;
+            transition: all .5s;
+}
+.switch__input {
+    display: none;
+}
+.switch__circle {
+    display: block;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 10px;
+            border-radius: 10px;
+    background-color: #F1F1F1;
+    -webkit-transition: all .5s;
+       -moz-transition: all .5s;
+        -ms-transition: all .5s;
+         -o-transition: all .5s;
+            transition: all .5s;
+    -webkit-box-shadow: 0 2px 2px #ccc;
+            box-shadow: 0 2px 2px #ccc;
+}
+.switch__input:checked ~ .switch__circle {
+    left: 18px;
+    background-color: #00c4cc;
+}
+.switch__input:checked ~ .switch__content {
+    border-color: transparent;
+    -webkit-transition: all 0s;
+       -moz-transition: all 0s;
+        -ms-transition: all 0s;
+         -o-transition: all 0s;
+            transition: all 0s;
+}
+.switch__input:checked ~ .switch__content:after {
+    background-color: rgba(55 190 176 / 25%);
+    width: 100%;
 }
