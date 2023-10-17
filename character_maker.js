@@ -350,6 +350,7 @@ function yomikomi(img){
                     {level:15,iryoku:"k30",name:"リーサルディメンジョン",c:13,mp:36},
                 ],
                 24:[
+                    {level:1,iryoku:"dru[0,3,6]",name:"ウルフバイト",mp:3}
                     {level:3,iryoku:"dru[4,7,13]",name:"ソーンバッシュ",mp:5},
                     {level:4,iryoku:"k20",name:"フリージングブレス",c:10,mp:5},
                     {level:4,iryoku:"k10",name:"ポイズンスプレッド",c:10,mp:6},
