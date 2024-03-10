@@ -645,7 +645,9 @@ function yomikomi(img){
 
             writeString+=`\n</chat-palette>\n</character>`;
             //+0を消す
-            writeString=writeString.replace(/\+0/g,"").replace(/\n{3,}/g,"\n\n");
+            //無駄に多い改行を消す
+            //全角の括弧だと参照されなかったので半角に直す
+            writeString=writeString.replace(/\+0/g,"").replace(/\n{3,}/g,"\n\n").replace(/（/g,"(").replace(/）/g,")");
             //バフ・デバフのチェックボックスが外れている場合にその部分のチャットパレットを消す
             for(let i=0;i<japanese.length;i++){
                 if(2<=i&&i<=5) continue;
