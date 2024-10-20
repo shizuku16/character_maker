@@ -201,7 +201,7 @@ function yomikomi(img){
                     if(jsondata.ST_name.includes(`武器習熟A/${jsondata.arms_cate[i]}`)) ST_damage++;
                     if(jsondata.ST_name.includes(`武器習熟S/${jsondata.arms_cate[i]}`)) ST_damage+=2;
                     let critical=Number(jsondata.arms_critical[i])||10;
-                    let hit=`{器用度}/6`;
+                    let hit=`({器用度}/6)`;
                     let temporary="";
                     let hero_ST_damage=0;
                     if(jsondata.arms_is_senyou[i]==1) hit=`({器用度}+2)/6`;
@@ -221,20 +221,20 @@ function yomikomi(img){
                     if(document.getElementById("buki").checked){
                         temporary+=`\n\n//-----${buki}`;
                         temporary+=`\n2d+{${ginou}}+${hit}+{命中}+{行動判定}+{行為判定} 【命中力判定】${buki}`;
-                        temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical} 【威力】${buki}`;
+                        temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical} 【威力】${buki}`;
                         if(document.getElementById("kurirei").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
+                            temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
                         if(document.getElementById("demeup").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
+                            temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
                         if(document.getElementById("kurirei").checked&&document.getElementById("demeup").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
+                            temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
                         if(document.getElementById("demefix").checked)
-                            temporary+=`\n${iryoku}+{${ginou}}+{筋力}/6+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
+                            temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
                     }
                     let attackstring="";
                     for(let i=0;i<document.getElementById("attack").value;i++) attackstring+=`+{攻撃${i+1}}`;
                     temporary=temporary.replace(/\+{攻撃}/g,attackstring);
-                    if(jsondata.arms_cate[i]=="ガン")　temporary=temporary.replace(/{シューター}\+{筋力}/g,"{マギテック}+{知力}")
+                    if(jsondata.arms_cate[i]=="ガン") temporary=temporary.replace(/{シューター}\+\({筋力}/g,"{マギテック}+({知力}")
                     writeString+=temporary;
                     
                 }
@@ -727,13 +727,19 @@ function horsemake(jsondata){
             writeString+=`        </data>\n`;
             i++;
         }
-        bui1=v.hr.findIndex((e,index)=>{if(index>bui1&&e.match(/\d+/)) return true});
+        bui1=v.hr.findIndex((e,index)=>{
+            if(e==undefined) return false;
+            if(index>bui1&&e.match(/\d+/)) return true;
+        });
         writeString+=`      </data>\n      <data name="バフ・デバフ">\n        <data name="命中" type="numberResource" currentValue="0">5</data>\n        <data name="回避" type="numberResource" currentValue="0">5</data>\n        <data name="攻撃" type="numberResource" currentValue="0">5</data>\n        <data name="精神抵抗" type="numberResource" currentValue="0">5</data>\n        <data name="生命抵抗" type="numberResource" currentValue="0">5</data>\n      </data>\n    </data>\n  </data>\n  <chat-palette dicebot="SwordWorld2.5">`;
         writeString+=`2d+${v.mr[bui2]}+{精神抵抗}　【精神抵抗】\n2d+${v.hr[bui2]}+{生命抵抗}　【生命抵抗】\n`;
         for(;v.name[bui2];bui2++){
             writeString+=`\n[${v.name[bui2]}]\n2d+${v.hit[bui2]}+{命中} 【命中判定】\n2d+${v.dmg[bui2]}+{攻撃}　【ダメージ】\n2d+${v.evd[bui2]}+{回避}　【回避】\n`;
         }
-        bui2=v.hr.findIndex((e,index)=>{if(index>bui2&&e.match(/\d+/)) return true});
+        bui2=v.hr.findIndex((e,index)=>{
+            if(e==undefined) return false;    
+            if(index>bui2&&e.match(/\d+/)) return true;
+        });
         writeString+=`</chat-palette>\n</character>`;
         animaldata.push(writeString);
     }
