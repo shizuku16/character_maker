@@ -112,7 +112,7 @@ function yomikomi(img){
             const hp=jsondata.HP;
             const mp=jsondata.MP;
             const bougo=jsondata.bougo;
-            const ginou_list=["ファイター","グラップラー","フェンサー","シューター","ソーサラー","コンジャラー",`プリースト/${jsondata.priest_sinkou}`,"フェアリーテイマー","マギテック","スカウト","レンジャー","セージ","エンハンサー","バード","アルケミスト","ライダー","デーモンルーラー","ウォーリーダー","ミスティック","フィジカルマスター","グリモワール","アーティザン","アリストクラシー","ドルイド","ジオマンサー","バトルダンサー"];
+            const ginou_list=["ファイター","グラップラー","フェンサー","シューター","ソーサラー","コンジャラー",`プリースト/${jsondata.priest_sinkou}`,"フェアリーテイマー","マギテック","スカウト","レンジャー","セージ","エンハンサー","バード","アルケミスト","ライダー","デーモンルーラー","ウォーリーダー","ミスティック","フィジカルマスター","グリモワール","アーティザン","アリストクラシー","ドルイド","ジオマンサー","バトルダンサー","アビスゲイザー","ダークハンター"];
             const hero=document.getElementById("hero").checked&&Number(jsondata.V_GLv21)>0 ? true:false;
             const auto=document.getElementById("attack");
             const design=document.getElementById("designAttack");
@@ -243,7 +243,7 @@ function yomikomi(img){
             //チャットパレット(魔法)
             const magic_numlist=[5,6,7,8,9,17,24];
             const magicName_list=["真語魔法","操霊魔法","神聖魔法","妖精魔法","魔動機術","召異魔法","森羅魔法"];
-            const magicName_japanese=["ソーサラー","コンジャラー","プリースト","フェアリーテイマー","マギテック","デーモンルーラー","ドルイド"];
+            const magicName_japanese=["ソーサラー","コンジャラー","プリースト","フェアリーテイマー","マギテック","デーモンルーラー","ドルイド","アビスゲイザー"];
             const magic_list={
                 5:[
                     {level:1,iryoku:"k10",name:"エネルギー・ボルト",c:10,mp:5},
