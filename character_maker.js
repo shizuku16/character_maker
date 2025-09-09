@@ -247,7 +247,7 @@ function characterMake(jsondata,img,url,isHenshin){
             let ginou=ginou_list[Number(jsondata.V_arms_hit_ginou[i])-1];
             let iryoku="k"+jsondata.arms_iryoku[i];
             let koteiti=`${jsondata.arms_damage_mod[i]||0}`;
-            if(jsondata.DRKH_name.filter(e=>e.includes("剛力弾")).length>0) {
+            if(jsondata.DRKH_name && jsondata.DRKH_name.filter(e=>e.includes("剛力弾")).length>0) {
                 if(Number(jsondata.V_GLv28)>=10) koteiti+=`+3`;
                 else if(Number(jsondata.V_GLv28)>=5) koteiti+=`+2`;
                 else koteiti+=`+1`;
@@ -257,6 +257,7 @@ function characterMake(jsondata,img,url,isHenshin){
             if(jsondata.ST_name.includes(`武器習熟S/${jsondata.arms_cate[i]}`)) ST_damage+=2;
             let critical=Number(jsondata.arms_critical[i])||10;
             let hit=`({器用度}/6)`;
+            let kinryokuDmage="({筋力}/6)";
             let temporary="";
             let hero_ST_damage=0;
             if(jsondata.arms_is_senyou[i]==1) hit=`({器用度}+2)/6`;
@@ -271,26 +272,35 @@ function characterMake(jsondata,img,url,isHenshin){
                     if(ST_damage<=hero_ST_damage) ST_damage=0;
                     else hero_ST_damage=0;
                 }
-                else ginou="ダークハンター";
+                else if(jsondata.V_GLv28>0){
+                    ginou="ダークハンター";
+                    kinryokuDmage="({精神力}/6)";
+                }
+                else{
+                    ginou="";
+                    kinryokuDmage="";
+                    hit="";
+                }
             }
             if(document.getElementById("buki").checked){
                 temporary+=`\n\n//-----${buki}`;
                 temporary+=`\n2d+{${ginou}}+${hit}+{命中}+{行動判定}+{行為判定} 【命中力判定】${buki}`;
-                temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical} 【威力】${buki}`;
+                temporary+=`\n${iryoku}+{${ginou}}+${kinryokuDmage}+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical} 【威力】${buki}`;
                 if(document.getElementById("kurirei").checked)
-                    temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
+                    temporary+=`\n${iryoku}+{${ginou}}+${kinryokuDmage}+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}$+{クリレイ} 【威力】${buki}/クリレイ`;
                 if(document.getElementById("demeup").checked)
-                    temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
+                    temporary+=`\n${iryoku}+{${ginou}}+${kinryokuDmage}+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇} 【威力】${buki}/出目上昇`;
                 if(document.getElementById("kurirei").checked&&document.getElementById("demeup").checked)
-                    temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
+                    temporary+=`\n${iryoku}+{${ginou}}+${kinryokuDmage}+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}#{出目上昇}$+{クリレイ} 【威力】${buki}/クリレイ&amp;出目上昇`;
                 if(document.getElementById("demefix").checked)
-                    temporary+=`\n${iryoku}+{${ginou}}+({筋力}/6)+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
+                    temporary+=`\n${iryoku}+{${ginou}}+${kinryokuDmage}+${koteiti}+${ST_damage}+${hero_ST_damage}+{攻撃}@${critical}\${出目固定} 【威力】${buki}/出目固定\n`;
             }
             let attackstring="";
+            console.log(temporary)
+            temporary=temporary.replace(/\{}/g,"").replace(/\+{2,}/g,"+");
             for(let i=0;i<document.getElementById("attack").value;i++) attackstring+=`+{攻撃${i+1}}`;
             temporary=temporary.replace(/\+{攻撃}/g,attackstring);
             if(jsondata.arms_cate[i]=="ガン") temporary=temporary.replace(/{シューター}\+\({筋力}/g,"{マギテック}+({知力}");
-            if(ginou=="ダークハンター") temporary=temporary.replace(/{筋力}/g,"{精神力}");
             writeString+=temporary;
             
         }
@@ -607,6 +617,7 @@ function characterMake(jsondata,img,url,isHenshin){
             if(Number(jsondata.V_GLv21)>=13) writeString+="《ヒーローマスター》3回の宣言特技の宣言が可能になる\n";
         }
         for(let i=0;i<jsondata.ST_name.length;i++){
+            if(jsondata.ST_name[i]=="") continue;
             if(hero){
                 switch(jsondata.V_ST_id[i]){
                     case "134": 
